@@ -25,12 +25,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	rows, err := db.Query("select * from rings limit 10")
-	if err != nil {
-		log.Fatal(err)
-	}
-	cols, _ := rows.Columns()
-	for _, colName := range cols {
-		fmt.Println(colName)
+	rows, err := db.Query("select table_name from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE'")
+	defer rows.Close()
+	for rows.Next() {
+		var table_name string
+		rows.Scan(&table_name)
+		fmt.Println(table_name)
 	}
 }
