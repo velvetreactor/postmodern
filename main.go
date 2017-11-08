@@ -42,6 +42,25 @@ func Home(ctx echo.Context) error {
 	return ctx.Render(http.StatusOK, "home", tableNames)
 }
 
+func GetTables(ctx echo.Context) error {
+	db, err := sql.Open("postgres", connStr)
+	var tableNames []string
+	if err != nil {
+		log.Fatal(err)
+	}
+	rows, err := db.Query("select table_name from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE'")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var table_name string
+		rows.Scan(&table_name)
+		tableNames = append(tableNames, table_name)
+	}
+	return ctx.JSON(http.StatusOK, tableNames)
+}
+
 func main() {
 	e := echo.New()
 	templates := template.Must(template.ParseGlob("src/templates/*.html"))
@@ -49,6 +68,7 @@ func main() {
 		templates: templates,
 	}
 	e.GET("/", Home)
+	e.GET("/tables", GetTables)
 
 	e.Logger.Fatal(e.Start(":1323"))
 
