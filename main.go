@@ -24,22 +24,7 @@ func (r *MyRenderer) Render(w io.Writer, templateName string, data interface{}, 
 }
 
 func Home(ctx echo.Context) error {
-	db, err := sql.Open("postgres", connStr)
-	var tableNames []string
-	if err != nil {
-		log.Fatal(err)
-	}
-	rows, err := db.Query("select table_name from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE'")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var table_name string
-		rows.Scan(&table_name)
-		tableNames = append(tableNames, table_name)
-	}
-	return ctx.Render(http.StatusOK, "home", tableNames)
+	return ctx.Render(http.StatusOK, "home", "")
 }
 
 func GetTables(ctx echo.Context) error {
@@ -67,6 +52,7 @@ func main() {
 	e.Renderer = &MyRenderer{
 		templates: templates,
 	}
+	e.Static("/dist", "dist")
 	e.GET("/", Home)
 	e.GET("/tables", GetTables)
 
