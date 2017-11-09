@@ -2,12 +2,15 @@ package main
 
 import (
 	"database/sql"
+	"database/sql/driver"
 	"fmt"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+	"time"
 
 	_ "github.com/lib/pq"
 	"gopkg.in/labstack/echo.v3"
@@ -16,6 +19,33 @@ import (
 const (
 	connStr = "user=t13 dbname=t13_web_dev sslmode=disable"
 )
+
+type DBCol string
+
+func (dbc DBCol) Value() (driver.Value, error) {
+	return "This is a dummy val", nil
+}
+
+func (dbc *DBCol) Scan(value interface{}) error {
+	switch value.(type) {
+	case []uint8:
+		uintslc := value.([]uint8)
+		*dbc = DBCol(string(uintslc))
+	case time.Time:
+		timeAttr := value.(time.Time)
+		*dbc = DBCol(timeAttr.String())
+	case string:
+		stringAttr := value.(string)
+		*dbc = DBCol(stringAttr)
+	case int32:
+		intAttr := value.(int)
+		*dbc = DBCol(strconv.Itoa(intAttr))
+	case bool:
+		boolAttr := value.(bool)
+		*dbc = DBCol(strconv.FormatBool(boolAttr))
+	}
+	return nil
+}
 
 type MyRenderer struct {
 	templates *template.Template
@@ -40,12 +70,46 @@ func GetTables(ctx echo.Context) error {
 		log.Fatal(err)
 	}
 	defer rows.Close()
+
 	for rows.Next() {
 		var table_name string
 		rows.Scan(&table_name)
 		tableNames = append(tableNames, table_name)
 	}
 	return ctx.JSON(http.StatusOK, tableNames)
+}
+
+func GetRows(ctx echo.Context) error {
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	tableName := ctx.QueryParam("table")
+	if tableName == "" {
+		log.Fatal("Table name required")
+	}
+	query := fmt.Sprintf("select * from %s where visible = true limit 50", tableName)
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	rowMapSlc := []map[string]DBCol{}
+	cols, err := rows.Columns()
+	results := make([]DBCol, len(cols))
+	scanArgs := make([]interface{}, len(results))
+	for i := range results {
+		scanArgs[i] = &results[i]
+	}
+	for rows.Next() {
+		rows.Scan(scanArgs...)
+		rowMap := map[string]DBCol{}
+		for idx, result := range results {
+			rowMap[cols[idx]] = result
+		}
+		rowMapSlc = append(rowMapSlc, rowMap)
+	}
+	return ctx.JSON(http.StatusOK, rowMapSlc)
 }
 
 func main() {
@@ -57,8 +121,7 @@ func main() {
 	e.Static("/dist", "dist")
 	e.GET("/", Home)
 	e.GET("/tables", GetTables)
+	e.GET("/rows", GetRows)
 	port := os.Getenv("PORT")
-
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)))
-
 }
