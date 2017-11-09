@@ -2,10 +2,12 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
+	"os"
 
 	_ "github.com/lib/pq"
 	"gopkg.in/labstack/echo.v3"
@@ -55,7 +57,8 @@ func main() {
 	e.Static("/dist", "dist")
 	e.GET("/", Home)
 	e.GET("/tables", GetTables)
+	port := os.Getenv("PORT")
 
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)))
 
 }
