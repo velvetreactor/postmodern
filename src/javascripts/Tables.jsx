@@ -17,16 +17,16 @@ class Tables extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     let tableItems = this.state.tableNames.map(name => {
       return <li>{name}</li>
     })
+    
     return (
-      <div className='tables'>
+      <section className='tables'>
         <ul>
           {tableItems}
         </ul>
-      </div>
+      </section>
     )
   }
 }
