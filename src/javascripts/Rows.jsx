@@ -26,7 +26,7 @@ class Rows extends React.Component {
       )
     });
     return (
-      <section className='rows'>
+      <section className='table-rows col-lg-10'>
         <table>
           <thead>
             <tr>

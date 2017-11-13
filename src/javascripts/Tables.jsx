@@ -20,9 +20,9 @@ class Tables extends React.Component {
     let tableItems = this.state.tableNames.map(name => {
       return <li>{name}</li>
     })
-    
+
     return (
-      <section className='tables'>
+      <section className='tables col-lg-2'>
         <ul>
           {tableItems}
         </ul>
