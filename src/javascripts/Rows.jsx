@@ -1,5 +1,6 @@
 import React from 'react';
 import request from 'superagent';
+import { connect } from 'react-redux';
 
 class Rows extends React.Component {
   constructor(props) {
@@ -10,7 +11,18 @@ class Rows extends React.Component {
   }
 
   componentWillMount() {
+    // First displayed table is Rings
     request.get('/rows?table=rings').end((err, res) => {
+      this.setState({ rows: res.body });
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.tableName == this.props.tableName) {
+      return false;
+    }
+    let url = `/rows?table=${this.props.tableName}`
+    request.get(url).end((err, res) => {
       this.setState({ rows: res.body });
     });
   }
@@ -25,6 +37,7 @@ class Rows extends React.Component {
         </tr>
       )
     });
+
     return (
       <section className='table-rows col-lg-10'>
         <table>
@@ -44,4 +57,10 @@ class Rows extends React.Component {
   }
 }
 
-export default Rows;
+function mapStateToProps(state) {
+  return {
+    tableName: state.tableState.tableName
+  }
+}
+
+export default connect(mapStateToProps)(Rows);

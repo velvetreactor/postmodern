@@ -88,7 +88,7 @@ func GetRows(ctx echo.Context) error {
 	if tableName == "" {
 		log.Fatal("Table name required")
 	}
-	query := fmt.Sprintf("select * from %s where visible = true limit 50", tableName)
+	query := fmt.Sprintf("select * from %s limit 50", tableName)
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Fatal(err)
