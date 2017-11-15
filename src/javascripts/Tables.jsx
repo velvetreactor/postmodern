@@ -1,5 +1,7 @@
 import React from 'react';
 import request from 'superagent';
+import { combineReducers } from 'redux';
+import { connect } from 'react-redux';
 
 class Tables extends React.Component {
   constructor(props) {
@@ -18,7 +20,9 @@ class Tables extends React.Component {
 
   render() {
     let tableItems = this.state.tableNames.map(name => {
-      return <li>{name}</li>
+      return <li><a href="#" onClick={() => {
+        this.props.changeCurrentTable(name);
+      }}>{name}</a></li>
     })
 
     return (
@@ -31,4 +35,36 @@ class Tables extends React.Component {
   }
 }
 
-export default Tables;
+function mapDispatchToProps(dispatch) {
+  return {
+    changeCurrentTable: tableName => {
+      dispatch(changeTableAction(tableName));
+    }
+  }
+}
+
+function mapStateToProps(state) {
+  return {
+    tableName: state.tableState.tableName
+  }
+}
+
+function changeTableAction(tableName) { // Action creator
+  return {
+    type: 'CHANGE_TABLE',
+    tableName: tableName
+  }
+}
+
+function tableState(state, action) {
+  switch (action.type) {
+    case 'CHANGE_TABLE':
+      return Object.assign({}, state, { tableName: action.tableName });
+    default:
+      return { tableName: '' };
+  }
+}
+
+export { tableState };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tables);
