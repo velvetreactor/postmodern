@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './javascripts/App.jsx';
 import { Provider } from 'react-redux';
-import { createStore, combineReducers } from 'redux'
-import { tableState } from './javascripts/Tables.jsx'
+import { createStore } from 'redux';
 
-const masterReducer = combineReducers({ tableState });
+import App from './javascripts/App.jsx';
+import masterReducer from './javascripts/reducers';
+
 const store = createStore(masterReducer);
 
 ReactDOM.render(
