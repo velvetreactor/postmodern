@@ -2,6 +2,8 @@ import React from 'react';
 import request from 'superagent';
 import { connect } from 'react-redux';
 
+import QueryBox from './QueryBox.jsx';
+
 class Rows extends React.Component {
   constructor(props) {
     super(props);
@@ -18,13 +20,23 @@ class Rows extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.tableName == this.props.tableName) {
+    if (prevProps == this.props) {
       return false;
     }
-    let url = `/rows?table=${this.props.tableName}`
-    request.get(url).end((err, res) => {
-      this.setState({ rows: res.body });
-    });
+
+    if (prevProps.tableName != this.props.tableName) {
+      let url = `/rows?table=${this.props.tableName}`
+      return request.get(url).end((err, res) => {
+        this.setState({ rows: res.body });
+      });
+    } else if (prevProps.query != this.props.query) {
+      let url = '/query';
+      let postBody = { query: this.props.query };
+      return request.post(url).send(postBody).end((err, res) => {
+        this.setState({ rows: res.body });
+      });
+    }
+
   }
 
   render() {
@@ -40,18 +52,21 @@ class Rows extends React.Component {
 
     return (
       <section className='table-rows col-lg-10'>
-        <table>
-          <thead>
-            <tr>
-              <th>id</th>
-              <th>name</th>
-              <th>description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items}
-          </tbody>
-        </table>
+        <QueryBox />
+        <div className="row">
+          <table>
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items}
+            </tbody>
+          </table>
+        </div>
       </section>
     )
   }
@@ -59,7 +74,8 @@ class Rows extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    tableName: state.tableState.tableName
+    tableName: state.tableState.tableName,
+    query: state.queryState.query
   }
 }
 

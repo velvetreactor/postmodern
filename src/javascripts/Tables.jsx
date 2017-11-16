@@ -56,15 +56,4 @@ function changeTableAction(tableName) { // Action creator
   }
 }
 
-function tableState(state, action) {
-  switch (action.type) {
-    case 'CHANGE_TABLE':
-      return Object.assign({}, state, { tableName: action.tableName });
-    default:
-      return { tableName: '' };
-  }
-}
-
-export { tableState };
-
 export default connect(mapStateToProps, mapDispatchToProps)(Tables);
