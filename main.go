@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"database/sql/driver"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
@@ -94,8 +95,38 @@ func GetRows(ctx echo.Context) error {
 		log.Fatal(err)
 	}
 	defer rows.Close()
+	rowMapSlc := generateRowMapSlc(rows)
+	return ctx.JSON(http.StatusOK, rowMapSlc)
+}
+
+type ExecuteQueryReq struct {
+	Query string `json:"query"`
+}
+
+func ExecuteQuery(ctx echo.Context) error {
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var eqr ExecuteQueryReq
+	req := ctx.Request()
+	dec := json.NewDecoder(req.Body)
+	dec.Decode(&eqr)
+	rows, err := db.Query(eqr.Query)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	rowMapSlc := generateRowMapSlc(rows)
+	return ctx.JSON(http.StatusOK, rowMapSlc)
+}
+
+func generateRowMapSlc(rows *sql.Rows) []map[string]DBCol {
 	rowMapSlc := []map[string]DBCol{}
 	cols, err := rows.Columns()
+	if err != nil {
+		log.Fatal(err)
+	}
 	results := make([]DBCol, len(cols))
 	scanArgs := make([]interface{}, len(results))
 	for i := range results {
@@ -109,7 +140,7 @@ func GetRows(ctx echo.Context) error {
 		}
 		rowMapSlc = append(rowMapSlc, rowMap)
 	}
-	return ctx.JSON(http.StatusOK, rowMapSlc)
+	return rowMapSlc
 }
 
 func main() {
@@ -120,6 +151,7 @@ func main() {
 	}
 	e.Static("/dist", "dist")
 	e.GET("/", Home)
+	e.POST("/query", ExecuteQuery)
 	e.GET("/tables", GetTables)
 	e.GET("/rows", GetRows)
 	port := os.Getenv("PORT")
