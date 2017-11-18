@@ -39,3 +39,7 @@ ul {
 .component-container {
   margin-top: 20px;
 }
+
+#credentials-modal {
+  display: none;
+}
