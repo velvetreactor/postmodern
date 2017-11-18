@@ -6,6 +6,10 @@ ul {
   background-color: #f9f9f9;
 }
 
+.tables ul {
+  padding-top: 6px;
+}
+
 .tables li {
   list-style-type: none;
   text-overflow: ellipsis;
@@ -30,6 +34,8 @@ ul {
 .query-box textarea {
   resize: none;
   height: 100px;
+  font-family: monospace;
+  font-size: 15px;
 }
 
 .execute-query-btn {
