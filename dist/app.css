@@ -1,0 +1,41 @@
+ul {
+  padding-left: 0;
+}
+
+.tables {
+  background-color: #f9f9f9;
+}
+
+.tables li {
+  list-style-type: none;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.table-row {
+  overflow: scroll;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.table-rows td {
+  white-space: nowrap;
+}
+
+.query-box {
+  text-align: right;
+  margin-left: 20px;
+}
+
+.query-box textarea {
+  resize: none;
+  height: 100px;
+}
+
+.execute-query-btn {
+  margin-top: 20px;
+}
+
+.component-container {
+  margin-top: 20px;
+}

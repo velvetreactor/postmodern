@@ -57,8 +57,8 @@ class Rows extends React.Component {
     return (
       <section className='table-rows col-lg-10'>
         <QueryBox />
-        <div className="row">
-          <table>
+        <div className="row table-row">
+          <table className="table table-striped table-bordered">
             <thead>
               <tr>
                 {headers}
