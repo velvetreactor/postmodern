@@ -5,8 +5,8 @@ import Rows from './Rows.jsx';
 class App extends React.Component {
   render() {
     return (
-      <main className="app container-fluid">
-        <div className="row">
+      <main className="app container">
+        <div className="row component-container">
           <Tables />
           <Rows />
         </div>

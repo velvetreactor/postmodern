@@ -11,11 +11,11 @@ class QueryBox extends React.Component {
 
   render() {
     return (
-      <div className="row">
-        <textarea name="" id="" cols="30" rows="10" onChange={(evt) => {
+      <div className="row form-group query-box">
+        <textarea className="form-control" onChange={(evt) => {
           this.setState({ query: evt.target.value });
         }}></textarea>
-        <button onClick={() => {
+        <button className="btn btn-primary execute-query-btn" onClick={() => {
           let sqlQuery = this.state.query;
           this.props.changeQuery(sqlQuery);
         }}>Query</button>
