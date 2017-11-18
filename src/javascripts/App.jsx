@@ -1,6 +1,7 @@
 import React from 'react';
 import Tables from './Tables.jsx';
 import Rows from './Rows.jsx';
+import CredentialsModal from './CredentialsModal.jsx';
 
 class App extends React.Component {
   render() {
@@ -10,6 +11,7 @@ class App extends React.Component {
           <Tables />
           <Rows />
         </div>
+        <CredentialsModal />
       </main>
     )
   }

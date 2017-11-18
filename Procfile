@@ -1,2 +1,2 @@
 webpack: webpack
-server: gin run main.go
+server: gin --all run main.go
