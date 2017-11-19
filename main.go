@@ -17,7 +17,6 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 	_ "github.com/lib/pq"
-	"github.com/satori/go.uuid"
 )
 
 const (
@@ -60,21 +59,24 @@ func (r *MyRenderer) Render(w io.Writer, templateName string, data interface{}, 
 }
 
 func Sessions(ctx echo.Context) error {
-	sess, _ := session.Get("session", ctx)
+	sess, e := session.Get("session", ctx)
+	if e != nil {
+		fmt.Println(e)
+	}
 	sess.Options = &sessions.Options{
 		Path:     "/",
-		MaxAge:   86400,
+		MaxAge:   86400 * 7,
 		HttpOnly: true,
 	}
 	// if pg auth is successful
-	uuid := uuid.NewV4()
-	sess.Values["id"] = uuid
+	sess.Values["dbo"] = "db conn"
 	sess.Save(ctx.Request(), ctx.Response())
-	fmt.Println(sess.Values["id"])
 	return ctx.String(http.StatusOK, "OK")
 }
 
 func Home(ctx echo.Context) error {
+	sess, _ := session.Get("session", ctx)
+	fmt.Println(sess.Values["id"])
 	return ctx.Render(http.StatusOK, "home", "")
 }
 
@@ -163,7 +165,8 @@ func generateRowMapSlc(rows *sql.Rows) []map[string]DBCol {
 
 func main() {
 	e := echo.New()
-	e.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
+	store := sessions.NewCookieStore([]byte("secret"))
+	e.Use(session.Middleware(store))
 	templates := template.Must(template.ParseGlob("src/templates/*.html"))
 	e.Renderer = &MyRenderer{
 		templates: templates,
