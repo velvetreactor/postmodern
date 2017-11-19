@@ -22,5 +22,17 @@
 
 
 [[constraint]]
-  name = "gopkg.in/labstack/echo.v3"
+  name = "github.com/labstack/echo"
   version = "3.2.3"
+
+[[constraint]]
+  name = "github.com/gorilla/sessions"
+  version = "1.1.0"
+
+[[constraint]]
+  name = "github.com/labstack/echo-contrib"
+  version = "0.4.0"
+
+[[constraint]]
+  name = "github.com/satori/go.uuid"
+  version = "1.1.0"

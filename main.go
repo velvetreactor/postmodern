@@ -13,8 +13,11 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo-contrib/session"
 	_ "github.com/lib/pq"
-	"gopkg.in/labstack/echo.v3"
+	"github.com/satori/go.uuid"
 )
 
 const (
@@ -54,6 +57,21 @@ type MyRenderer struct {
 
 func (r *MyRenderer) Render(w io.Writer, templateName string, data interface{}, ctx echo.Context) error {
 	return r.templates.ExecuteTemplate(w, templateName, data)
+}
+
+func Sessions(ctx echo.Context) error {
+	sess, _ := session.Get("session", ctx)
+	sess.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   86400,
+		HttpOnly: true,
+	}
+	// if pg auth is successful
+	uuid := uuid.NewV4()
+	sess.Values["id"] = uuid
+	sess.Save(ctx.Request(), ctx.Response())
+	fmt.Println(sess.Values["id"])
+	return ctx.String(http.StatusOK, "OK")
 }
 
 func Home(ctx echo.Context) error {
@@ -145,12 +163,14 @@ func generateRowMapSlc(rows *sql.Rows) []map[string]DBCol {
 
 func main() {
 	e := echo.New()
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
 	templates := template.Must(template.ParseGlob("src/templates/*.html"))
 	e.Renderer = &MyRenderer{
 		templates: templates,
 	}
 	e.Static("/dist", "dist")
 	e.GET("/", Home)
+	e.GET("/sessions", Sessions)
 	e.POST("/query", ExecuteQuery)
 	e.GET("/tables", GetTables)
 	e.GET("/rows", GetRows)
