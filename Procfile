@@ -1,2 +1,2 @@
 webpack: webpack
-server: gin --all run main.go
+server: gin --all STORE_SECRET=secret run main.go
