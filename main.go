@@ -17,10 +17,12 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 	_ "github.com/lib/pq"
+	"github.com/satori/go.uuid"
+	"github.com/velvetreactor/postapocalypse/dbconnpool"
 )
 
 const (
-	connStr = "user=t13 dbname=t13_web_dev sslmode=disable"
+	connStr = "postgres://uxecrbnmovlmhz:Zc-w9LF5W9IdiupOEN8aj8qY71@ec2-54-204-40-96.compute-1.amazonaws.com:5432/d7jvfb37d090ba"
 )
 
 type DBCol string
@@ -58,34 +60,60 @@ func (r *MyRenderer) Render(w io.Writer, templateName string, data interface{}, 
 	return r.templates.ExecuteTemplate(w, templateName, data)
 }
 
+type Session struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	DbName   string `json:"db_name"`
+}
+
 func Sessions(ctx echo.Context) error {
-	sess, e := session.Get("session", ctx)
-	if e != nil {
-		fmt.Println(e)
+	var sessBody Session
+	sess, err := session.Get("session", ctx)
+	reqBody := ctx.Request().Body
+	dec := json.NewDecoder(reqBody)
+	dec.Decode(&sessBody)
+	connStr := fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/%s",
+		sessBody.Username,
+		sessBody.Password,
+		sessBody.Host,
+		sessBody.Port,
+		sessBody.DbName,
+	)
+	if err != nil {
+		fmt.Println(err)
 	}
 	sess.Options = &sessions.Options{
 		Path:     "/",
 		MaxAge:   86400 * 7,
 		HttpOnly: true,
 	}
-	// if pg auth is successful
-	sess.Values["dbo"] = "db conn"
-	sess.Save(ctx.Request(), ctx.Response())
-	return ctx.String(http.StatusOK, "OK")
+	k := sess.Values["uuid"].(string)
+	if k == "" || dbconnpool.Connections[k] == nil {
+		db, err := sql.Open("postgres", connStr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		id := uuid.NewV4().String()
+		dbconnpool.Connections[id] = db
+		sess.Values["uuid"] = id
+		sess.Save(ctx.Request(), ctx.Response())
+	}
+	resSlc, _ := json.Marshal(`{ code: 200 }`)
+	return ctx.JSON(http.StatusOK, string(resSlc))
 }
 
 func Home(ctx echo.Context) error {
-	sess, _ := session.Get("session", ctx)
-	fmt.Println(sess.Values["id"])
 	return ctx.Render(http.StatusOK, "home", "")
 }
 
 func GetTables(ctx echo.Context) error {
-	db, err := sql.Open("postgres", connStr)
+	sess, _ := session.Get("session", ctx)
+	id := sess.Values["uuid"].(string)
+	db := dbconnpool.Connections[id]
 	var tableNames []string
-	if err != nil {
-		log.Fatal(err)
-	}
 	rows, err := db.Query("select table_name from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE'")
 	if err != nil {
 		log.Fatal(err)
@@ -173,7 +201,7 @@ func main() {
 	}
 	e.Static("/dist", "dist")
 	e.GET("/", Home)
-	e.GET("/sessions", Sessions)
+	e.POST("/sessions", Sessions)
 	e.POST("/query", ExecuteQuery)
 	e.GET("/tables", GetTables)
 	e.GET("/rows", GetRows)

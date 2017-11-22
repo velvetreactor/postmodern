@@ -13,9 +13,9 @@ class Tables extends React.Component {
   }
 
   componentDidMount() {
-    request.get('/tables').end((err, res) => {
-      this.setState({ tableNames: res.body });
-    });
+    // request.get('/tables').end((err, res) => {
+    //   this.setState({ tableNames: res.body });
+    // });
   }
 
   render() {

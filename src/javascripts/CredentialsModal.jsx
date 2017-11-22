@@ -1,12 +1,29 @@
 import React from 'react';
+import request from 'superagent';
 
 class CredentialsModal extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      username: '',
+      password: '',
+      host: '',
+      port: '',
+      db_name: ''
+    }
   }
 
   postSession() {
-    console.log('Posted Session Securely');
+    request
+      .post('/sessions')
+      .send(this.state)
+      .end((err, res) => {
+      });
+  }
+
+  handleInputChange(evt) {
+    let field = evt.target.name;
+    this.setState({ [field]: evt.target.value });
   }
 
   render() {
@@ -20,21 +37,29 @@ class CredentialsModal extends React.Component {
             <div className="modal-body">
               <form>
                 <div className="form-group">
-                  <label className="form-control-label">Postgres URL</label>
-                  <input type="text" className="form-control" />
-                </div>
-                <div className="form-group">
                   <label className="form-control-label">Username</label>
-                  <input type="text" className="form-control" />
+                  <input name="username" type="text" className="form-control" value={this.state.username} onChange={this.handleInputChange.bind(this)} />
                 </div>
                 <div className="form-group">
                   <label className="form-control-label">Password</label>
-                  <input type="password" className="form-control" />
+                  <input name="password" type="password" className="form-control" value={this.state.password} onChange={this.handleInputChange.bind(this)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-control-label">Host</label>
+                  <input name="host" type="text" className="form-control" value={this.state.host} onChange={this.handleInputChange.bind(this)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-control-label">Port</label>
+                  <input name="port" type="text" className="form-control" value={this.state.port} onChange={this.handleInputChange.bind(this)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-control-label">Database Name</label>
+                  <input name="db_name" type="text" className="form-control" value={this.state.db_name} onChange={this.handleInputChange.bind(this)} />
                 </div>
               </form>
             </div>
             <div className="modal-footer">
-              <button onClick={this.postSession} type="button" className="btn btn-success">Connect</button>
+              <button onClick={this.postSession.bind(this)} type="button" className="btn btn-success">Connect</button>
             </div>
           </div>
         </div>

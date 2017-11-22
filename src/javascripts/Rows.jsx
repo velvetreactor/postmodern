@@ -14,9 +14,9 @@ class Rows extends React.Component {
 
   componentWillMount() {
     // First displayed table is Rings
-    request.get('/rows?table=rings').end((err, res) => {
-      this.props.setRows(res.body);
-    });
+    // request.get('/rows?table=rings').end((err, res) => {
+    //   this.props.setRows(res.body);
+    // });
   }
 
   componentDidUpdate(prevProps, prevState) {
