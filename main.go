@@ -165,8 +165,8 @@ func generateRowMapSlc(rows *sql.Rows) []map[string]DBCol {
 
 func main() {
 	e := echo.New()
-	store := sessions.NewCookieStore([]byte("secret"))
-	e.Use(session.Middleware(store))
+	secret := os.Getenv("STORE_SECRET")
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte(secret))))
 	templates := template.Must(template.ParseGlob("src/templates/*.html"))
 	e.Renderer = &MyRenderer{
 		templates: templates,
