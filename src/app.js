@@ -14,5 +14,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('app-entry')
 );
-
-$('#credentials-modal').modal('show');

@@ -13,6 +13,16 @@ class CredentialsModal extends React.Component {
     }
   }
 
+  componentWillMount() {
+    request
+      .get('/session')
+      .end((err, res) => {
+        if (!res) {
+          $('#credentials-modal').modal('show');
+        }
+      });
+  }
+
   postSession() {
     request
       .post('/sessions')
