@@ -1,6 +1,6 @@
 ## Development
 ### Dependencies
-  * Go (built on `1.9.1`)
+  * Go (built on `1.10`)
   * golang/dep `brew install dep`
   * nodejs `8.9.0` (`nvm install`)
   * yarn (built on `1.2.1`) `brew install yarn`

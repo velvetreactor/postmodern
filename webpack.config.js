@@ -2,7 +2,7 @@ module.exports = {
   context: __dirname + '/src',
   entry: './app',
   output: {
-    path: __dirname + '/dist',
+    path: __dirname + '/dist/javascripts',
     filename: 'bundle.js'
   },
   watch: true,

@@ -1,0 +1,16 @@
+FROM node:8.9.4-alpine
+
+# Set up volume folder
+WORKDIR /app
+
+# Copy files
+COPY stylesheets.docker.src/ /app/
+
+# Install yarn
+RUN apk update && \
+  apk add yarn && \
+  yarn global add gulp && \
+  yarn link gulp && \
+  gulp
+
+CMD ["gulp", "sass:watch"]

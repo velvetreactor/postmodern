@@ -1,0 +1,38 @@
+Arguments: 
+  /usr/local/Cellar/node/9.7.1/bin/node /usr/local/Cellar/yarn/1.5.1/libexec/bin/yarn.js add gulp-sass --save-dev
+
+PATH: 
+  /usr/local/opt/qt@5.5/bin:./node_modules/.bin:/usr/local/opt/kibana@5.6/bin:/Users/davidko/.rbenv/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/opt/qt@5.5/bin:./node_modules/.bin:/usr/local/opt/kibana@5.6/bin:/Users/davidko/.rbenv/shims
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  9.7.1
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "PostApocalypse:stylesheets.src",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: package.json: Name contains illegal characters
+      at new MessageError (/usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:186:110)
+      at module.exports.exports.default (/usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:37549:13)
+      at /usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:52434:51
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:98:30)
+      at /usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:109:13
+      at <anonymous>
