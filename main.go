@@ -21,9 +21,7 @@ import (
 	"github.com/velvetreactor/postapocalypse/dbconnpool"
 )
 
-const (
-	connStr = "postgres://uxecrbnmovlmhz:Zc-w9LF5W9IdiupOEN8aj8qY71@ec2-54-204-40-96.compute-1.amazonaws.com:5432/d7jvfb37d090ba"
-)
+const ()
 
 type DBCol string
 
