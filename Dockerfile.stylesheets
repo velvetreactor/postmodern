@@ -4,13 +4,13 @@ FROM node:8.9.4-alpine
 WORKDIR /app
 
 # Copy files
-COPY stylesheets.docker.src/ /app/
+COPY docker.stylesheets.src /app/
 
 # Install yarn
 RUN apk update && \
   apk add yarn && \
   yarn global add gulp && \
-  yarn link gulp && \
+  yarn install && \
   gulp
 
 CMD ["gulp", "sass:watch"]

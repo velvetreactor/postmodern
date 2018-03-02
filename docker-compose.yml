@@ -9,7 +9,7 @@ services:
     image: nycdavid/postapoc-css:0.0.1
     volumes:
       - css_volume:/app/dist
-      - ./src/stylesheets:/app/src
+      - ./docker.stylesheets.src/src:/app/src
   postapoc:
     image: nycdavid/postapoc:0.0.1
     environment:
