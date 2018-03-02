@@ -1,12 +1,10 @@
 FROM node:8.9.4-alpine
 
 # Set up volume folder
-RUN mkdir -p /app/dist/javascripts
 WORKDIR /app
 
 # Copy files
-COPY package.json yarn.lock webpack.config.js ./
-COPY src ./src/
+COPY docker.javascripts.src /app/
 
 # Install yarn
 RUN apk update && \

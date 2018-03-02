@@ -3,8 +3,8 @@ services:
   javascripts:
     image: nycdavid/postapoc-js:0.0.1
     volumes:
-      - js_volume:/app/dist/javascripts
-      - ./src:/app/src
+      - js_volume:/app/dist
+      - ./docker.javascripts.src/src:/app/src
   stylesheets:
     image: nycdavid/postapoc-css:0.0.1
     volumes:
@@ -19,6 +19,7 @@ services:
     volumes:
       - js_volume:/go/src/app/dist/javascripts
       - css_volume:/go/src/app/dist/stylesheets
+      - ./static:/go/src/app/dist/static
 volumes:
   js_volume:
   css_volume:
