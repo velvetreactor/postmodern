@@ -1,4 +1,21 @@
 {
-  "src_folders": ["."],
-  "output_folder": "reports"
+  "globals_path": "globals.js",
+  "src_folders": ["tests"],
+  "output_folder": "reports",
+  "test_settings": {
+    "default": {
+      "launch_url": "http://postapoc:3000",
+      "selenium_host": "chromedriver",
+      "screenshots": {
+        "enabled": true,
+        "on_failure": true,
+        "path": "screenshots"
+      },
+      "videos": {
+        "enabled": true,
+        "delete_on_success": true,
+        "path": "videos"
+      }
+    }
+  }
 }
