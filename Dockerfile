@@ -11,12 +11,10 @@ COPY ./src ./src
 RUN apk update && \
   apk add curl git && \
   curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh && \
+  go get github.com/codegangsta/gin && \
   dep ensure
 
 # Setup volume directories
 RUN mkdir dist/
 
-# Compile binary
-RUN go install
-
-CMD ["app"]
+CMD ["gin", "run", "main.go"]

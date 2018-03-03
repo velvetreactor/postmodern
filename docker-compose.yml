@@ -20,6 +20,7 @@ services:
       - js_volume:/go/src/app/dist/javascripts
       - css_volume:/go/src/app/dist/stylesheets
       - ./static:/go/src/app/dist/static
+      - ./main.go:/go/src/app/main.go
     depends_on:
       - javascripts
       - stylesheets

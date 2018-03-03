@@ -9,3 +9,5 @@ RUN apk update && \
   npm install -g nightwatch && \
   npm install && \
   rm -rf /tmp/* /root/.npm
+
+CMD ["nightwatch"]

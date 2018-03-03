@@ -9,6 +9,6 @@ image-nightwatch:
 
 # Testing
 test-integ:
-	docker-compose run nightwatch
+	docker-compose -f docker-compose.test.yml run nightwatch
 test-unit:
 	docker-compose run postapoc go test
