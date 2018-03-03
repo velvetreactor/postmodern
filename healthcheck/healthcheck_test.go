@@ -2,6 +2,7 @@ package healthcheck
 
 import (
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"gopkg.in/labstack/echo.v3"
@@ -23,7 +24,7 @@ func TestPostgresHealthError(t *testing.T) {
 }
 
 func TestPostgresHealthSuccess(t *testing.T) {
-	connStr := "postgres://postgres@localhost:5432/postgres?sslmode=disable"
+	connStr := os.Getenv("PGCONN")
 	e := echo.New()
 	hc := New(connStr)
 	rec := httptest.NewRecorder()

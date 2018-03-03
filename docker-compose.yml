@@ -21,9 +21,11 @@ services:
       - css_volume:/go/src/app/dist/stylesheets
       - ./static:/go/src/app/dist/static
       - ./main.go:/go/src/app/main.go
+      - ./healthcheck:/go/src/app/healthcheck
     depends_on:
       - javascripts
       - stylesheets
+      - postgres
   postgres:
     image: postgres:10.3-alpine
 
