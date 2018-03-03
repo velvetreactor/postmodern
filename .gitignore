@@ -2,3 +2,5 @@ vendor/
 dist/bundle.js
 gin-bin
 node_modules/
+test.integration/videos
+test.integration/reports

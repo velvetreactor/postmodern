@@ -20,6 +20,24 @@ services:
       - js_volume:/go/src/app/dist/javascripts
       - css_volume:/go/src/app/dist/stylesheets
       - ./static:/go/src/app/dist/static
+    depends_on:
+      - javascripts
+      - stylesheets
+  nightwatch:
+    image: nycdavid/nightwatch:0.0.1
+    volumes:
+      - ./test.integration/tests:/app/tests
+      - ./test.integration/videos:/app/videos
+    depends_on:
+      - chromedriver
+      - postapoc
+  chromedriver:
+    image: nycdavid/chromedriver:0.0.1
+    environment:
+      - VNC_ENABLED=true
+      - EXPOSE_X11=true
+    ports:
+      - 5900:5900
 volumes:
   js_volume:
   css_volume:

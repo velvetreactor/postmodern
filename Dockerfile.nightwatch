@@ -1,0 +1,13 @@
+FROM node:8.9.4-alpine
+
+WORKDIR /app
+
+COPY ./test.integration /app
+
+RUN apk update && \
+  apk add ffmpeg && \
+  npm install -g nightwatch && \
+  npm install && \
+  rm -rf /tmp/* /root/.npm
+
+CMD ["nightwatch"]

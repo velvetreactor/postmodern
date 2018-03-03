@@ -1,0 +1,14 @@
+{
+  "name": "test.integration",
+  "version": "1.0.0",
+  "description": "",
+  "main": "home_page.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nightwatch-video-recorder": "^1.1.0"
+  }
+}
