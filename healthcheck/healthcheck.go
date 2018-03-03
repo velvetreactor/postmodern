@@ -2,6 +2,7 @@ package healthcheck
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	_ "github.com/lib/pq"
@@ -10,21 +11,21 @@ import (
 
 type Healthchecker struct {
 	ConnStr string
-	Echo    *echo.Echo
 }
 
 func New(connStr string) *Healthchecker {
-	e := echo.New()
-	return &Healthchecker{ConnStr: connStr, Echo: e}
+	return &Healthchecker{ConnStr: connStr}
 }
 
 func (hc *Healthchecker) PostgresHealth(ctx echo.Context) error {
 	db, err := sql.Open("postgres", hc.ConnStr)
 	if err != nil {
+		fmt.Println(err)
 		return ctx.String(http.StatusInternalServerError, "Connection error")
 	}
 	err = db.Ping()
 	if err != nil {
+		fmt.Println(err)
 		return ctx.String(http.StatusInternalServerError, "Connection error")
 	}
 	return ctx.String(http.StatusOK, "OK")

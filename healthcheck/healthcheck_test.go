@@ -9,10 +9,11 @@ import (
 
 func TestPostgresHealthError(t *testing.T) {
 	connStr := "badconnstring"
+	e := echo.New()
 	hc := New(connStr)
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(echo.GET, "/postgres", nil)
-	ctx := hc.Echo.NewContext(req, rec)
+	ctx := e.NewContext(req, rec)
 	hc.PostgresHealth(ctx)
 	code := ctx.Response().Status
 
@@ -23,10 +24,11 @@ func TestPostgresHealthError(t *testing.T) {
 
 func TestPostgresHealthSuccess(t *testing.T) {
 	connStr := "postgres://postgres@localhost:5432/postgres?sslmode=disable"
+	e := echo.New()
 	hc := New(connStr)
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(echo.GET, "/postgres", nil)
-	ctx := hc.Echo.NewContext(req, rec)
+	ctx := e.NewContext(req, rec)
 	hc.PostgresHealth(ctx)
 	code := ctx.Response().Status
 
