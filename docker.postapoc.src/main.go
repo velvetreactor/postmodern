@@ -20,6 +20,10 @@ func main() {
 	renderer := web.NewRenderer("web/templates/*.html")
 	e.Renderer = renderer
 
+	// Static assets
+	e.Static("/dist", "dist")
+	e.Static("/static", "static")
+
 	// Start server
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", os.Getenv("PORT"))))
 }
