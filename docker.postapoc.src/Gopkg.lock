@@ -33,6 +33,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/nycdavid/ziptie"
+  packages = ["."]
+  revision = "a6307158258231d44197f4823fe65cb40f19cacb"
+
+[[projects]]
+  branch = "master"
   name = "github.com/valyala/bytebufferpool"
   packages = ["."]
   revision = "e746df99fe4a3986f4d4f79e13c1e0117ce9c2f7"
@@ -67,6 +73,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d4be16dbbcf4a595472a21dbb9147b8d31c948d142db0c4991a4e1ea28a38e9e"
+  inputs-digest = "c0c2da404e0dcb53d2c355a98ae01f68e302a1447a472b219d04b3d35c153e54"
   solver-name = "gps-cdcl"
   solver-version = 1

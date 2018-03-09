@@ -2,7 +2,7 @@ FROM node:8.9.4-alpine
 
 WORKDIR /app
 
-COPY ./test.integration /app
+COPY ./docker.nightwatch.src /app
 
 RUN apk update && \
   apk add ffmpeg && \

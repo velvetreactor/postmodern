@@ -2,5 +2,5 @@ vendor/
 dist/bundle.js
 gin-bin
 node_modules/
-test.integration/videos
-test.integration/reports
+docker.nightwatch.src/videos
+docker.nightwatch.src/reports

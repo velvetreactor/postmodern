@@ -1,5 +1,5 @@
 {
-  "name": "test.integration",
+  "name": "docker.nightwatch.src",
   "version": "1.0.0",
   "description": "",
   "main": "home_page.js",

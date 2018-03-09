@@ -1,11 +1,11 @@
 FROM golang:1.10-alpine
 
-WORKDIR /go/src/app
+RUN mkdir -p /go/src/github.com/velvetreactor/postapocalypse
+
+WORKDIR /go/src/github.com/velvetreactor/postapocalypse
 
 # Copy dep files
-COPY ./Gopkg* ./
-COPY ./main.go ./
-COPY ./src ./src
+COPY ./docker.postapoc.src ./
 
 # Install Go deps
 RUN apk update && \

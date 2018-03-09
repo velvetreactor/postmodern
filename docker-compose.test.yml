@@ -28,8 +28,8 @@ services:
   nightwatch:
     image: nycdavid/nightwatch:0.0.1
     volumes:
-      - ./test.integration/tests:/app/tests
-      - ./test.integration/videos:/app/videos
+      - ./docker.nightwatch.src/tests:/app/tests
+      - ./docker.nightwatch.src/videos:/app/videos
     depends_on:
       - chromedriver
       - postapoc
