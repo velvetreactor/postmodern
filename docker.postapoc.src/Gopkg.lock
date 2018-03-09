@@ -35,7 +35,7 @@
   branch = "master"
   name = "github.com/nycdavid/ziptie"
   packages = ["."]
-  revision = "a6307158258231d44197f4823fe65cb40f19cacb"
+  revision = "5bc56b94bbe1af6b91ec9efd354ea8182aa60d25"
 
 [[projects]]
   branch = "master"

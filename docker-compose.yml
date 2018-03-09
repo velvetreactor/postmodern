@@ -22,6 +22,7 @@ services:
       - css_volume:/go/src/github.com/velvetreactor/postapocalypse/dist/stylesheets
       - ./static:/go/src/github.com/velvetreactor/postapocalypse/dist/static
       - ./docker.postapoc.src/healthcheck:/go/src/github.com/velvetreactor/postapocalypse/healthcheck
+      - ./docker.postapoc.src/web:/go/src/github.com/velvetreactor/postapocalypse/web
       - ./docker.postapoc.src/main.go:/go/src/github.com/velvetreactor/postapocalypse/main.go
     depends_on:
       - javascripts
