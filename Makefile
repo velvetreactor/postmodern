@@ -11,7 +11,4 @@ image-nightwatch:
 test-integ:
 	docker-compose -f docker-compose.test.yml run nightwatch
 test-unit:
-	docker-compose run \
-	-e PGCONN="postgres://postgres@postgres:5432/postgres?sslmode=disable" \
-	postapoc \
-	go test ./**/*.go
+	docker-compose run postapoc go test -v ./...
