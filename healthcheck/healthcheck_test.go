@@ -1,39 +1,49 @@
 package healthcheck
 
 import (
+	"fmt"
 	"net/http/httptest"
 	"os"
 	"testing"
 
+	"github.com/nycdavid/ziptie"
 	"gopkg.in/labstack/echo.v3"
 )
 
 func TestPostgresHealthError(t *testing.T) {
-	connStr := "badconnstring"
 	e := echo.New()
-	hc := New(connStr)
-	rec := httptest.NewRecorder()
-	req := httptest.NewRequest(echo.GET, "/postgres", nil)
-	ctx := e.NewContext(req, rec)
-	hc.PostgresHealth(ctx)
-	code := ctx.Response().Status
+	badConnStr := "xyznrbaaaa"
+	ctrl := &HealthchecksCtrl{
+		Config: map[string]interface{}{
+			"PGConnStr": badConnStr,
+		},
+	}
+	ziptie.Fasten(ctrl, e)
 
-	if code == 200 {
-		t.Fatal("Expecting non-200 status")
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(echo.GET, "/healthchecks/postgres", nil)
+	e.ServeHTTP(rec, req)
+
+	if rec.Code != 500 {
+		t.Fatal(fmt.Sprintf("Expecting status %s, got %d", "500", rec.Code))
 	}
 }
 
 func TestPostgresHealthSuccess(t *testing.T) {
-	connStr := os.Getenv("PGCONN")
 	e := echo.New()
-	hc := New(connStr)
-	rec := httptest.NewRecorder()
-	req := httptest.NewRequest(echo.GET, "/postgres", nil)
-	ctx := e.NewContext(req, rec)
-	hc.PostgresHealth(ctx)
-	code := ctx.Response().Status
+	connStr := os.Getenv("PGCONN")
+	ctrl := &HealthchecksCtrl{
+		Config: map[string]interface{}{
+			"PGConnStr": connStr,
+		},
+	}
+	ziptie.Fasten(ctrl, e)
 
-	if code != 200 {
-		t.Fatal("Expecting non-200 status")
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(echo.GET, "/healthchecks/postgres", nil)
+	e.ServeHTTP(rec, req)
+
+	if rec.Code != 200 {
+		t.Fatal(fmt.Sprintf("Expecting status %s, got %d", "200", rec.Code))
 	}
 }
