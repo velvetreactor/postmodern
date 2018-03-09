@@ -3,6 +3,7 @@ jobs:
   build:
     docker:
       - image: nycdavid/postapoc:0.0.1
+      - image: circleci/ruby:2.2.7
     steps:
       - checkout
       - run:
