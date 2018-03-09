@@ -13,5 +13,5 @@ type PagesCtrl struct {
 }
 
 func (pc *PagesCtrl) HomeFunc(ctx echo.Context) error {
-	return ctx.String(http.StatusOK, "Home")
+	return ctx.Render(http.StatusOK, "home", nil)
 }
