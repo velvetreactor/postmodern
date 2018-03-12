@@ -3,7 +3,7 @@ package web
 import (
 	"net/http"
 
-	"gopkg.in/labstack/echo.v3"
+	"github.com/labstack/echo"
 )
 
 type PagesCtrl struct {

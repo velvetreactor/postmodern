@@ -4,17 +4,24 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/nycdavid/ziptie"
 	"github.com/velvetreactor/postapocalypse/web"
-	"gopkg.in/labstack/echo.v3"
 )
 
 func main() {
 	e := echo.New()
 
+	// Middleware
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))))
+
 	// Controllers
 	pagesCtrl := &web.PagesCtrl{Namespace: ""}
+	sessionsCtrl := &web.SessionsCtrl{Namespace: "/sessions"}
 	ziptie.Fasten(pagesCtrl, e)
+	ziptie.Fasten(sessionsCtrl, e)
 
 	// Rendering
 	renderer := web.NewRenderer("web/templates/*.html")
