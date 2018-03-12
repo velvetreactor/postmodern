@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"io"
 
-	"gopkg.in/labstack/echo.v3"
+	"github.com/labstack/echo"
 )
 
 type Renderer struct {

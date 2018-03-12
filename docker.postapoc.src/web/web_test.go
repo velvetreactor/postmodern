@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/labstack/echo"
 	"github.com/nycdavid/ziptie"
-	"gopkg.in/labstack/echo.v3"
 )
 
 func TestHomePage(t *testing.T) {

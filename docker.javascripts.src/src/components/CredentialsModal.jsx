@@ -5,19 +5,15 @@ class CredentialsModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: '',
-      host: '',
-      port: '',
-      db_name: ''
+      connectionString: ''
     }
   }
 
   componentWillMount() {
     request
-      .get('/session')
+      .get('/sessions')
       .end((err, res) => {
-        if (!res) {
+        if (res.statusCode != 200) {
           $('#credentials-modal').modal('show');
         }
       });
@@ -47,24 +43,15 @@ class CredentialsModal extends React.Component {
             <div className="modal-body">
               <form>
                 <div className="form-group">
-                  <label className="form-control-label">Username</label>
-                  <input name="username" type="text" className="form-control" value={this.state.username} onChange={this.handleInputChange.bind(this)} />
-                </div>
-                <div className="form-group">
-                  <label className="form-control-label">Password</label>
-                  <input name="password" type="password" className="form-control" value={this.state.password} onChange={this.handleInputChange.bind(this)} />
-                </div>
-                <div className="form-group">
-                  <label className="form-control-label">Host</label>
-                  <input name="host" type="text" className="form-control" value={this.state.host} onChange={this.handleInputChange.bind(this)} />
-                </div>
-                <div className="form-group">
-                  <label className="form-control-label">Port</label>
-                  <input name="port" type="text" className="form-control" value={this.state.port} onChange={this.handleInputChange.bind(this)} />
-                </div>
-                <div className="form-group">
-                  <label className="form-control-label">Database Name</label>
-                  <input name="db_name" type="text" className="form-control" value={this.state.db_name} onChange={this.handleInputChange.bind(this)} />
+                  <label className="form-control-label">PG Connection String</label>
+                  <input
+                    placeholder="postgres://postgres@localhost:5432/postgres?sslmode=verify"
+                    name="connectionString"
+                    type="text"
+                    className="form-control"
+                    value={this.state.connectionString}
+                    onChange={this.handleInputChange.bind(this)}
+                  />
                 </div>
               </form>
             </div>

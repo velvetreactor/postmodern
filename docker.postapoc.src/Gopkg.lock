@@ -2,22 +2,54 @@
 
 
 [[projects]]
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
+
+[[projects]]
+  name = "github.com/gorilla/context"
+  packages = ["."]
+  revision = "1ea25387ff6f684839d82767c1733ff4d4d15d0a"
+  version = "v1.1"
+
+[[projects]]
+  name = "github.com/gorilla/securecookie"
+  packages = ["."]
+  revision = "e59506cc896acb7f7bf732d4fdf5e25f7ccd8983"
+  version = "v1.1.1"
+
+[[projects]]
+  name = "github.com/gorilla/sessions"
+  packages = ["."]
+  revision = "ca9ada44574153444b00d3fd9c8559e4cc95f896"
+  version = "v1.1"
+
+[[projects]]
+  name = "github.com/labstack/echo"
+  packages = [
+    ".",
+    "middleware"
+  ]
+  revision = "b338075a0fc6e1a0683dbf03d09b4957a289e26f"
+  version = "3.2.6"
+
+[[projects]]
+  name = "github.com/labstack/echo-contrib"
+  packages = ["session"]
+  revision = "05b673bd85c645d769ea2d10e933f3fa1ee1acfa"
+  version = "0.4.1"
+
+[[projects]]
   name = "github.com/labstack/gommon"
   packages = [
+    "bytes",
     "color",
-    "log"
+    "log",
+    "random"
   ]
   revision = "57409ada9da0f2afad6664c49502f8c50fbd8476"
   version = "0.2.3"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/lib/pq"
-  packages = [
-    ".",
-    "oid"
-  ]
-  revision = "88edab0803230a3898347e77b474f8c1820a1f20"
 
 [[projects]]
   name = "github.com/mattn/go-colorable"
@@ -35,7 +67,7 @@
   branch = "master"
   name = "github.com/nycdavid/ziptie"
   packages = ["."]
-  revision = "5bc56b94bbe1af6b91ec9efd354ea8182aa60d25"
+  revision = "b9f3b77532b9b3b3eba86463c8c79a8e967d65c4"
 
 [[projects]]
   branch = "master"
@@ -64,15 +96,9 @@
   packages = ["unix"]
   revision = "0ac51a24ef1c37380f98ba8b98f56e3bffd59850"
 
-[[projects]]
-  name = "gopkg.in/labstack/echo.v3"
-  packages = ["."]
-  revision = "b338075a0fc6e1a0683dbf03d09b4957a289e26f"
-  version = "3.2.6"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c0c2da404e0dcb53d2c355a98ae01f68e302a1447a472b219d04b3d35c153e54"
+  inputs-digest = "54fd69ceb82788deda5d6a39f5edfc09552adea4e3912c2c4a8a96a6dac1f0ee"
   solver-name = "gps-cdcl"
   solver-version = 1

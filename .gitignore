@@ -1,6 +1,7 @@
 vendor/
-dist/bundle.js
+dist/
 gin-bin
 node_modules/
 docker.nightwatch.src/videos
 docker.nightwatch.src/reports
+.DS_Store

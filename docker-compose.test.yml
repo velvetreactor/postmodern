@@ -14,17 +14,21 @@ services:
     image: nycdavid/postapoc:0.0.1
     environment:
       - PORT=3000
+      - PGCONN=postgres://postgres@postgres/postgres?sslmode=disable
     ports:
       - "3000:3000"
     volumes:
-      - js_volume:/go/src/app/dist/javascripts
-      - css_volume:/go/src/app/dist/stylesheets
-      - ./static:/go/src/app/dist/static
-      - ./main.go:/go/src/app/main.go
+      - js_volume:/go/src/github.com/velvetreactor/postapocalypse/dist/javascripts
+      - css_volume:/go/src/github.com/velvetreactor/postapocalypse/dist/stylesheets
+      - ./docker.postapoc.src/static:/go/src/github.com/velvetreactor/postapocalypse/dist/static
+      - ./docker.postapoc.src/web:/go/src/github.com/velvetreactor/postapocalypse/web
+      - ./docker.postapoc.src/main.go:/go/src/github.com/velvetreactor/postapocalypse/main.go
     depends_on:
       - javascripts
       - stylesheets
       - postgres
+  postgres:
+    image: postgres:10.3-alpine
   nightwatch:
     image: nycdavid/nightwatch:0.0.1
     volumes:
@@ -38,10 +42,6 @@ services:
     environment:
       - VNC_ENABLED=true
       - EXPOSE_X11=true
-    ports:
-      - 5900:5900
-  postgres:
-    image: postgres:10.3-alpine
 
 volumes:
   js_volume:
