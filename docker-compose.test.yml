@@ -15,6 +15,7 @@ services:
     environment:
       - PORT=3000
       - PGCONN=postgres://postgres@postgres/postgres?sslmode=disable
+      - SESSION_SECRET=developmentsecretxyz
     ports:
       - "3000:3000"
     volumes:
