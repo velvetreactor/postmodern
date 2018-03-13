@@ -11,6 +11,7 @@ services:
       - css_volume:/app/dist
       - ./docker.stylesheets.src/src:/app/src
   postapoc:
+    entrypoint: go run main.go
     image: nycdavid/postapoc:0.0.1
     environment:
       - PORT=3000
