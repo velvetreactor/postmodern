@@ -4,10 +4,9 @@ module.exports = {
     browser
       .url(browser.launch_url)
       .waitForElementVisible('#credentials-modal', 1000)
-      .setValue('input[name="postgres-conn-string"]', pgConnStr);
-    browser
+      .setValue('input[name="connectionString"]', pgConnStr)
       .click('.btn-success');
 
-    browser.expect.element('.tables li').to.be.present;
+    browser.waitForElementVisible('.tables li', 1000);
   }
 }

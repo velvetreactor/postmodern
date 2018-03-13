@@ -14,7 +14,4 @@ RUN apk update && \
   go get github.com/codegangsta/gin && \
   dep ensure
 
-# Setup volume directories
-RUN mkdir dist/
-
 CMD ["gin", "run", "main.go"]

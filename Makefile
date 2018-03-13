@@ -16,6 +16,6 @@ dep-ensure:
 
 # Testing
 test-integ:
-	docker-compose -f docker-compose.test.yml run nightwatch
+	docker-compose -f docker-compose.test.yml up
 test-unit:
 	docker-compose run postapoc go test -v ./...

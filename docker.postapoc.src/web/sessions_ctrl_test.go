@@ -1,6 +1,9 @@
 package web
 
 import (
+	"bytes"
+	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -13,10 +16,14 @@ import (
 	"github.com/nycdavid/ziptie"
 )
 
-func TestInvalidSession(t *testing.T) {
-	e := echo.New()
+func setupSessionStore(e *echo.Echo) {
 	cookieStore := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
 	e.Use(session.Middleware(cookieStore))
+}
+
+func TestInvalidSession(t *testing.T) {
+	e := echo.New()
+	setupSessionStore(e)
 	ctrl := &SessionsCtrl{Namespace: "/sessions"}
 	ziptie.Fasten(ctrl, e)
 	req := httptest.NewRequest(http.MethodGet, "/sessions", nil)
@@ -31,6 +38,7 @@ func TestInvalidSession(t *testing.T) {
 
 func TestValidSession(t *testing.T) {
 	e := echo.New()
+	setupSessionStore(e)
 	cookieStore := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
 	e.Use(session.Middleware(cookieStore))
 	ctrl := &SessionsCtrl{Namespace: "/sessions"}
@@ -47,5 +55,30 @@ func TestValidSession(t *testing.T) {
 
 	if rec.Code != 200 {
 		t.Error(fmt.Sprintf("Expected %d, but got %d", 200, rec.Code))
+	}
+}
+
+func TestValidSessionCreation(t *testing.T) {
+	e := echo.New()
+	cookieStore := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
+	e.Use(session.Middleware(cookieStore))
+	ctrl := &SessionsCtrl{Namespace: "/sessions"}
+	ziptie.Fasten(ctrl, e)
+	rec := httptest.NewRecorder()
+	var jsonBody bytes.Buffer
+	sesn := Session{ConnectionString: "postgres://postgres@postgres:5432/postgres?sslmode=disable"}
+	json.NewEncoder(&jsonBody).Encode(sesn)
+
+	req := httptest.NewRequest(http.MethodPost, "/sessions", &jsonBody)
+	ctx := e.NewContext(req, rec)
+	ctx.Set("_session_store", cookieStore)
+	storedSesn, _ := session.Get("session", ctx)
+	e.ServeHTTP(rec, req)
+
+	if rec.Code != 200 {
+		t.Error(fmt.Sprintf("Expected %d, got %d", 200, rec.Code))
+	}
+	if storedSesn.Values["dbo"].(*sql.DB).Ping() != nil {
+		t.Error("Database object unavailable")
 	}
 }
