@@ -24,6 +24,9 @@ class CredentialsModal extends React.Component {
       .post('/sessions')
       .send(this.state)
       .end((err, res) => {
+        if (res.statusCode == 200) {
+          $('#credentials-modal').modal('hide');
+        }
       });
   }
 

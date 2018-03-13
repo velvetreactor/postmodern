@@ -16,6 +16,12 @@ dep-ensure:
 
 # Testing
 test-integ:
-	docker-compose -f docker-compose.test.yml up
+	docker-compose \
+	-f docker-compose.test.yml \
+	up \
+	--force-recreate \
+	--abort-on-container-exit
 test-unit:
-	docker-compose run postapoc go test -v ./...
+	docker-compose stop postgres && \
+	docker-compose rm -f postgres && \
+	docker-compose run --rm postapoc go test -v ./...

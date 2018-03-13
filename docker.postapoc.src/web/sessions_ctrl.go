@@ -3,6 +3,7 @@ package web
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/sessions"
@@ -12,7 +13,7 @@ import (
 )
 
 type Session struct {
-	ConnectionString string `json:"connection_string"`
+	ConnectionString string `json:"connectionString"`
 }
 
 type SessionsCtrl struct {
@@ -38,10 +39,13 @@ func (ctrl *SessionsCtrl) CreateFunc(ctx echo.Context) error {
 	json.NewDecoder(ctx.Request().Body).Decode(&sesnBody)
 	db, err := sql.Open("postgres", sesnBody.ConnectionString)
 	if err != nil {
+		log.Print(err)
 		return ctx.JSON(http.StatusUnauthorized, false)
 	}
 	err = db.Ping()
 	if err != nil {
+		log.Print(sesnBody.ConnectionString)
+		log.Print(err)
 		return ctx.JSON(http.StatusUnauthorized, false)
 	}
 	sesn, _ := session.Get("session", ctx)

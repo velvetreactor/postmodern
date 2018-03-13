@@ -20,8 +20,10 @@ func main() {
 	// Controllers
 	pagesCtrl := &web.PagesCtrl{Namespace: ""}
 	sessionsCtrl := &web.SessionsCtrl{Namespace: "/sessions"}
+	tablesCtrl := &web.TablesCtrl{Namespace: "/tables"}
 	ziptie.Fasten(pagesCtrl, e)
 	ziptie.Fasten(sessionsCtrl, e)
+	ziptie.Fasten(tablesCtrl, e)
 
 	// Rendering
 	renderer := web.NewRenderer("web/templates/*.html")

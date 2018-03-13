@@ -5,7 +5,8 @@ module.exports = {
       .url(browser.launch_url)
       .waitForElementVisible('#credentials-modal', 1000)
       .setValue('input[name="connectionString"]', pgConnStr)
-      .click('.btn-success');
+      .click('.btn-success')
+      .waitForElementNotVisible('#credentials-modal', 1000);
 
     browser.waitForElementVisible('.tables li', 1000);
   }
