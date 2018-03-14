@@ -2,7 +2,6 @@ package web
 
 import (
 	"bytes"
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -36,49 +35,57 @@ func TestInvalidSession(t *testing.T) {
 	}
 }
 
-func TestValidSession(t *testing.T) {
-	e := echo.New()
-	setupSessionStore(e)
-	cookieStore := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
-	e.Use(session.Middleware(cookieStore))
-	ctrl := &SessionsCtrl{Namespace: "/sessions"}
-	ziptie.Fasten(ctrl, e)
-	req := httptest.NewRequest(http.MethodGet, "/sessions", nil)
-	rec := httptest.NewRecorder()
-
-	ctx := e.NewContext(req, rec)
-	ctx.Set("_session_store", cookieStore)
-	sesn, _ := session.Get("session", ctx)
-	sesn.Options = &sessions.Options{MaxAge: 3600}
-	sesn.Values["pgConnStr"] = "postgres://user@dbhost:5432/dummydb?sslmode=disable"
-	e.ServeHTTP(rec, req)
-
-	if rec.Code != 200 {
-		t.Error(fmt.Sprintf("Expected %d, but got %d", 200, rec.Code))
-	}
-}
-
-func TestValidSessionCreation(t *testing.T) {
+func TestValidSessionCreationSendsCookie(t *testing.T) {
 	e := echo.New()
 	cookieStore := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
 	e.Use(session.Middleware(cookieStore))
 	ctrl := &SessionsCtrl{Namespace: "/sessions"}
 	ziptie.Fasten(ctrl, e)
-	rec := httptest.NewRecorder()
+
 	var jsonBody bytes.Buffer
 	sesn := Session{ConnectionString: "postgres://postgres@postgres:5432/postgres?sslmode=disable"}
 	json.NewEncoder(&jsonBody).Encode(sesn)
-
+	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodPost, "/sessions", &jsonBody)
-	ctx := e.NewContext(req, rec)
-	ctx.Set("_session_store", cookieStore)
-	storedSesn, _ := session.Get("session", ctx)
+
+	e.ServeHTTP(rec, req)
+
+	resCookie := rec.Header().Get("Set-Cookie")
+	if resCookie == "" {
+		t.Error("Expected Set-Cookie Header to be non-empty")
+	}
+}
+
+func TestValidSessionCreationStoresDbo(t *testing.T) {
+	e := echo.New()
+	cookieStore := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
+	e.Use(session.Middleware(cookieStore))
+	ctrl := &SessionsCtrl{Namespace: "/sessions"}
+	ziptie.Fasten(ctrl, e)
+
+	// Pre-authenticated request
+	var jsonBody bytes.Buffer
+	sesn := Session{ConnectionString: "postgres://postgres@postgres:5432/postgres?sslmode=disable"}
+	json.NewEncoder(&jsonBody).Encode(sesn)
+	req := httptest.NewRequest(http.MethodPost, "/sessions", &jsonBody)
+	rec := httptest.NewRecorder()
+
+	e.ServeHTTP(rec, req)
+	if rec.Code != 200 {
+		t.Error(fmt.Sprintf("Expected %d, got %d", 200, rec.Code))
+	}
+	resp := rec.Result()
+	respCookies := resp.Cookies()
+	sesnCookie := respCookies[0]
+
+	// Authenticated request
+	req = httptest.NewRequest(http.MethodGet, "/sessions", nil)
+	req.AddCookie(sesnCookie)
+	rec = httptest.NewRecorder()
+
 	e.ServeHTTP(rec, req)
 
 	if rec.Code != 200 {
 		t.Error(fmt.Sprintf("Expected %d, got %d", 200, rec.Code))
-	}
-	if storedSesn.Values["dbo"].(*sql.DB).Ping() != nil {
-		t.Error("Database object unavailable")
 	}
 }

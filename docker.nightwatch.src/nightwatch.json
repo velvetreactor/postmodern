@@ -4,6 +4,7 @@
   "output_folder": "reports",
   "test_settings": {
     "default": {
+      "skip_testcases_on_fail": false,
       "launch_url": "http://postapoc:3000",
       "selenium_host": "chromedriver",
       "screenshots": {
