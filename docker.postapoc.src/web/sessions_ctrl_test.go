@@ -37,8 +37,7 @@ func TestInvalidSession(t *testing.T) {
 
 func TestValidSessionCreationSendsCookie(t *testing.T) {
 	e := echo.New()
-	cookieStore := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
-	e.Use(session.Middleware(cookieStore))
+	setupSessionStore(e)
 	ctrl := &SessionsCtrl{Namespace: "/sessions"}
 	ziptie.Fasten(ctrl, e)
 
@@ -58,8 +57,7 @@ func TestValidSessionCreationSendsCookie(t *testing.T) {
 
 func TestValidSessionCreationStoresDbo(t *testing.T) {
 	e := echo.New()
-	cookieStore := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
-	e.Use(session.Middleware(cookieStore))
+	setupSessionStore(e)
 	ctrl := &SessionsCtrl{Namespace: "/sessions"}
 	ziptie.Fasten(ctrl, e)
 
