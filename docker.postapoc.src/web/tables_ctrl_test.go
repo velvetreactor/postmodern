@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -16,20 +15,6 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/nycdavid/ziptie"
 )
-
-func getDbo(t *testing.T) *sql.DB {
-	db, err := sql.Open("postgres", os.Getenv("PGCONN"))
-	if err != nil {
-		log.Print(err)
-		t.Error("Cannot open PG connection")
-	}
-	err = db.Ping()
-	if err != nil {
-		log.Print(err)
-		t.Error("Cannot open PG connection")
-	}
-	return db
-}
 
 func TestFetchTables(t *testing.T) {
 	e := echo.New()

@@ -10,7 +10,10 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 	_ "github.com/lib/pq"
+	"github.com/satori/go.uuid"
 )
+
+var DBObjects = make(map[uuid.UUID]*sql.DB)
 
 type Session struct {
 	ConnectionString string `json:"connectionString"`
@@ -25,10 +28,18 @@ type SessionsCtrl struct {
 
 func (ctrl *SessionsCtrl) ShowFunc(ctx echo.Context) error {
 	sesn, _ := session.Get("session", ctx)
-	sesn.Options = &sessions.Options{MaxAge: 3600}
-	pgConnStr := sesn.Values["pgConnStr"]
-	sesn.Save(ctx.Request(), ctx.Response())
-	if pgConnStr == nil {
+	storedSesnUuid, ok := sesn.Values["uuid"].(string)
+	if !ok {
+		log.Print("Uuid type assertion failed")
+		return ctx.JSON(http.StatusUnauthorized, false)
+	}
+	sesnUuid, err := uuid.FromString(storedSesnUuid)
+	if err != nil {
+		log.Print(err)
+		return ctx.JSON(http.StatusUnauthorized, false)
+	}
+	dbo := DBObjects[sesnUuid]
+	if dbo.Ping() != nil {
 		return ctx.JSON(http.StatusUnauthorized, false)
 	}
 	return ctx.JSON(http.StatusOK, true)
@@ -50,7 +61,9 @@ func (ctrl *SessionsCtrl) CreateFunc(ctx echo.Context) error {
 	}
 	sesn, _ := session.Get("session", ctx)
 	sesn.Options = &sessions.Options{MaxAge: 3600}
-	sesn.Values["dbo"] = db
+	newUuid := uuid.NewV4()
+	sesn.Values["uuid"] = newUuid.String()
 	sesn.Save(ctx.Request(), ctx.Response())
+	DBObjects[newUuid] = db
 	return ctx.JSON(http.StatusOK, true)
 }

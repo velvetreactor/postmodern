@@ -3,6 +3,8 @@ package web
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"os"
 	"testing"
 
 	_ "github.com/lib/pq"
@@ -16,4 +18,18 @@ func populateDbForTest(dbo *sql.DB, t *testing.T) {
 			t.Error(err)
 		}
 	}
+}
+
+func getDbo(t *testing.T) *sql.DB {
+	db, err := sql.Open("postgres", os.Getenv("PGCONN"))
+	if err != nil {
+		log.Print(err)
+		t.Error("Cannot open PG connection")
+	}
+	err = db.Ping()
+	if err != nil {
+		log.Print(err)
+		t.Error("Cannot open PG connection")
+	}
+	return db
 }
