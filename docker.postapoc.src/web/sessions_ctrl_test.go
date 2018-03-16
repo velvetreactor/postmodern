@@ -15,9 +15,10 @@ import (
 	"github.com/nycdavid/ziptie"
 )
 
-func setupSessionStore(e *echo.Echo) {
+func setupSessionStore(e *echo.Echo) *sessions.CookieStore {
 	cookieStore := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
 	e.Use(session.Middleware(cookieStore))
+	return cookieStore
 }
 
 func TestInvalidSession(t *testing.T) {

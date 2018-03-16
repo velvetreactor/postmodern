@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 	_ "github.com/lib/pq"
+	"github.com/satori/go.uuid"
 )
 
 type TablesResp struct {
@@ -22,7 +23,13 @@ type TablesCtrl struct {
 func (ctrl *TablesCtrl) IndexFunc(ctx echo.Context) error {
 	var tablesResp TablesResp
 	sesn, _ := session.Get("session", ctx)
-	dbo := sesn.Values["dbo"].(*sql.DB)
+	uuidStr := sesn.Values["uuid"].(string)
+	sesnUuid, err := uuid.FromString(uuidStr)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, false)
+	}
+	dbo := DBObjects[sesnUuid]
+
 	rows, err := dbo.Query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'")
 	if err != nil {
 		log.Fatal(err)
