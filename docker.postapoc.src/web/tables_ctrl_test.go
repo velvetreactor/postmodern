@@ -1,35 +1,38 @@
 package web
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
-	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 	_ "github.com/lib/pq"
 	"github.com/nycdavid/ziptie"
+	"github.com/satori/go.uuid"
 )
 
 func TestFetchTables(t *testing.T) {
 	e := echo.New()
+	cookieStore := setupSessionStore(e)
 	ctrl := &TablesCtrl{Namespace: "/tables"}
 	ziptie.Fasten(ctrl, e)
-	cookieStore := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
-	e.Use(session.Middleware(cookieStore))
+
+	sampleUuid := uuid.NewV4()
+	dbo := getDbo(t)
+	populateDbForTest(dbo, t)
+	DBObjects[sampleUuid] = dbo
 
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/tables", nil)
 	ctx := e.NewContext(req, rec)
 	ctx.Set("_session_store", cookieStore)
 	sesn, _ := session.Get("session", ctx)
-	sesn.Values["dbo"] = getDbo(t)
-	populateDbForTest(sesn.Values["dbo"].(*sql.DB), t)
+	sesn.Values["uuid"] = sampleUuid.String()
+	sesn.Save(ctx.Request(), ctx.Response())
+
 	e.ServeHTTP(rec, req)
 
 	var tablesResp TablesResp
