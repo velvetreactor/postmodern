@@ -5,3 +5,4 @@ node_modules/
 docker.nightwatch.src/videos
 docker.nightwatch.src/reports
 .DS_Store
+yarn-error.log
