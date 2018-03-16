@@ -1,5 +1,14 @@
 import { combineReducers } from 'redux';
 
+function databaseState(state = {}, action) {
+  switch (action.type) {
+    case 'TABLES_FETCH_SUCCEEDED':
+      return Object.assign({}, state, { tables: action.tables });
+    default:
+      return state.tables ? { tables: state.tables } : { tables: [] };
+  }
+}
+
 function tableState(state = {}, action) {
   switch (action.type) {
     case 'CHANGE_TABLE':
@@ -27,4 +36,9 @@ function rowState(state = {}, action) {
   }
 }
 
-export default combineReducers({ tableState, queryState, rowState });
+export default combineReducers({
+  databaseState,
+  tableState,
+  queryState,
+  rowState
+});

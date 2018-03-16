@@ -1,26 +1,15 @@
 import React from 'react';
 import request from 'superagent';
-import { combineReducers } from 'redux';
 import { connect } from 'react-redux';
 
 class Tables extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      tableNames: []
-    }
-  }
-
-  componentDidMount() {
-    // request.get('/tables').end((err, res) => {
-    //   this.setState({ tableNames: res.body });
-    // });
   }
 
   render() {
-    let tableItems = this.state.tableNames.map(name => {
-      return <li><a href="#" onClick={() => {
+    let tableItems = this.props.tables.map((name,idx) => {
+      return <li key={`tables-${name}`}><a href="#" onClick={() => {
         this.props.changeCurrentTable(name);
       }}>{name}</a></li>
     })
@@ -45,6 +34,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
   return {
+    tables: state.databaseState.tables,
     tableName: state.tableState.tableName
   }
 }

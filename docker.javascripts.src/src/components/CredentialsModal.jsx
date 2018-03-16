@@ -1,9 +1,11 @@
 import React from 'react';
 import request from 'superagent';
+import { connect } from 'react-redux';
 
 class CredentialsModal extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       connectionString: ''
     }
@@ -19,15 +21,8 @@ class CredentialsModal extends React.Component {
       });
   }
 
-  postSession() {
-    request
-      .post('/sessions')
-      .send(this.state)
-      .end((err, res) => {
-        if (res.statusCode == 200) {
-          $('#credentials-modal').modal('hide');
-        }
-      });
+  connectBtnClicked() {
+    this.props.connectBtnClicked(this.state.connectionString);
   }
 
   handleInputChange(evt) {
@@ -59,7 +54,7 @@ class CredentialsModal extends React.Component {
               </form>
             </div>
             <div className="modal-footer">
-              <button onClick={this.postSession.bind(this)} type="button" className="btn btn-success">Connect</button>
+              <button onClick={this.connectBtnClicked.bind(this)} type="button" className="btn btn-success">Connect</button>
             </div>
           </div>
         </div>
@@ -68,4 +63,16 @@ class CredentialsModal extends React.Component {
   }
 }
 
-export default CredentialsModal;
+function mapStateToProps(state) {
+  return { };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    connectBtnClicked: (connectionString) => {
+      dispatch({ type: 'DB_CONNECTION_REQUESTED', payload: { connectionString } })
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CredentialsModal);

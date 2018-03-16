@@ -8,6 +8,12 @@ image-nightwatch:
 	docker build -t nycdavid/nightwatch:0.0.1 -f Dockerfile.nightwatch .
 
 # Package management
+yarn-add:
+	docker-compose run \
+	-v $(shell pwd)/docker.javascripts.src:/app \
+	javascripts \
+	yarn add ${PACKAGE}
+
 dep-ensure:
 	docker-compose run \
 	-v $(shell pwd)/docker.postapoc.src:/go/src/github.com/velvetreactor/postapocalypse/ \
