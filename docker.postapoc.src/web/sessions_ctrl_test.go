@@ -6,20 +6,11 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
-	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
-	"github.com/labstack/echo-contrib/session"
 	"github.com/nycdavid/ziptie"
 )
-
-func setupSessionStore(e *echo.Echo) *sessions.CookieStore {
-	cookieStore := sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET")))
-	e.Use(session.Middleware(cookieStore))
-	return cookieStore
-}
 
 func TestInvalidSession(t *testing.T) {
 	e := echo.New()
