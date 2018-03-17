@@ -4,7 +4,7 @@ module.exports = {
   'A User should not see the modal again after authenticating': browser => {
     TestHelper.login(browser)
     browser
-      .url(browser.launch_url)
+      .refresh()
       .expect.element('#credentials-modal')
       .to.not.be.visible;
     browser.end();

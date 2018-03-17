@@ -7,6 +7,10 @@ class Tables extends React.Component {
     super(props);
   }
 
+  componentDidMount() {
+    this.props.getTables();
+  }
+
   render() {
     let tableItems = this.props.tables.map((name,idx) => {
       return <li key={`tables-${name}`}><a href="#" onClick={() => {
@@ -27,7 +31,10 @@ class Tables extends React.Component {
 function mapDispatchToProps(dispatch) {
   return {
     changeCurrentTable: tableName => {
-      dispatch(changeTableAction(tableName));
+      dispatch({ type: 'CHANGE_TABLE', tableName: tableName });
+    },
+    getTables: () => {
+      dispatch({ type: 'TABLES_FETCH_REQUESTED' })
     }
   }
 }
@@ -36,13 +43,6 @@ function mapStateToProps(state) {
   return {
     tables: state.databaseState.tables,
     tableName: state.tableState.tableName
-  }
-}
-
-function changeTableAction(tableName) { // Action creator
-  return {
-    type: 'CHANGE_TABLE',
-    tableName: tableName
   }
 }
 
