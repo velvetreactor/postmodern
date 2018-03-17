@@ -32,6 +32,10 @@ services:
   postgres:
     image: postgres:10.3-alpine
   nightwatch:
+    entrypoint:
+      - ./scripts/wait_for_curl.sh
+      - http://postapoc:3000
+      - "nightwatch"
     image: nycdavid/nightwatch:0.0.1
     volumes:
       - ./docker.nightwatch.src/tests:/app/tests

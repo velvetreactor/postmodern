@@ -3,11 +3,11 @@ FROM node:8.9.4-alpine
 WORKDIR /app
 
 COPY ./docker.nightwatch.src /app
+COPY ./scripts /app/scripts
 
 RUN apk update && \
-  apk add ffmpeg && \
+  apk add ffmpeg curl && \
   npm install -g nightwatch && \
   npm install && \
-  rm -rf /tmp/* /root/.npm
-
-CMD ["nightwatch"]
+  rm -rf /tmp/* /root/.npm && \
+  chmod +x ./scripts/wait_for_curl.sh
