@@ -1,14 +1,9 @@
 import React from 'react';
-import request from 'superagent';
 import { connect } from 'react-redux';
 
 class Tables extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  componentDidMount() {
-    this.props.getTables();
   }
 
   render() {
@@ -32,9 +27,6 @@ function mapDispatchToProps(dispatch) {
   return {
     changeCurrentTable: tableName => {
       dispatch({ type: 'CHANGE_TABLE', tableName: tableName });
-    },
-    getTables: () => {
-      dispatch({ type: 'TABLES_FETCH_REQUESTED' })
     }
   }
 }
