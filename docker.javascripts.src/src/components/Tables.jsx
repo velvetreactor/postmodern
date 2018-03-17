@@ -1,5 +1,4 @@
 import React from 'react';
-import request from 'superagent';
 import { connect } from 'react-redux';
 
 class Tables extends React.Component {
@@ -27,7 +26,7 @@ class Tables extends React.Component {
 function mapDispatchToProps(dispatch) {
   return {
     changeCurrentTable: tableName => {
-      dispatch(changeTableAction(tableName));
+      dispatch({ type: 'CHANGE_TABLE', tableName: tableName });
     }
   }
 }
@@ -36,13 +35,6 @@ function mapStateToProps(state) {
   return {
     tables: state.databaseState.tables,
     tableName: state.tableState.tableName
-  }
-}
-
-function changeTableAction(tableName) { // Action creator
-  return {
-    type: 'CHANGE_TABLE',
-    tableName: tableName
   }
 }
 

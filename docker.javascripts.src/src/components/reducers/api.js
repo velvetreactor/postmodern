@@ -19,6 +19,15 @@ class API {
       throw new Error(tablesRes.body);
     }
   }
+
+  static async CheckSession() {
+    let sessionRes = await request.get('/sessions')
+    if (sessionRes.statusCode === 200) {
+      return sessionRes
+    } else {
+      throw new Error(authRes.body);
+    }
+  }
 }
 
 export default API

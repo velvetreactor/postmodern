@@ -1,5 +1,4 @@
 import React from 'react';
-import request from 'superagent';
 import { connect } from 'react-redux';
 
 class CredentialsModal extends React.Component {
@@ -12,13 +11,7 @@ class CredentialsModal extends React.Component {
   }
 
   componentWillMount() {
-    request
-      .get('/sessions')
-      .end((err, res) => {
-        if (res.statusCode != 200) {
-          $('#credentials-modal').modal('show');
-        }
-      });
+    this.props.checkSession();
   }
 
   connectBtnClicked() {
@@ -71,6 +64,9 @@ function mapDispatchToProps(dispatch) {
   return {
     connectBtnClicked: (connectionString) => {
       dispatch({ type: 'DB_CONNECTION_REQUESTED', payload: { connectionString } })
+    },
+    checkSession: () => {
+      dispatch({ type: 'SESSION_CHECK_REQUESTED' })
     }
   }
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import request from 'superagent';
 import { connect } from 'react-redux';
 
 import QueryBox from './QueryBox.jsx';

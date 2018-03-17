@@ -21,9 +21,23 @@ function* fetchTables() {
   }
 }
 
+function* checkSession() {
+  try {
+    const sessionRes = yield call(API.CheckSession);
+    $('#credentials-modal').modal('hide');
+    yield put({ type: 'SESSION_CHECK_SUCCEEDED' })
+    yield put({ type: 'TABLES_FETCH_REQUESTED' })
+  } catch(err) {
+    console.log(err);
+    $('#credentials-modal').modal('show');
+    yield put({ type: 'SESSION_CHECK_FAILED', error: err })
+  }
+}
+
 function* mySaga() {
   yield takeLatest('DB_CONNECTION_REQUESTED', connectToDatabase);
   yield takeLatest('TABLES_FETCH_REQUESTED', fetchTables);
+  yield takeLatest('SESSION_CHECK_REQUESTED', checkSession);
 }
 
 export default mySaga;
