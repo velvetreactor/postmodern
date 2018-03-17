@@ -7,8 +7,9 @@ class Tables extends React.Component {
   }
 
   render() {
-    let tableItems = this.props.tables.map((name,idx) => {
-      return <li key={`tables-${name}`}><a href="#" onClick={() => {
+    let tableItems = this.props.tables.map(name => {
+      let uniqKey = `tables-${name}`
+      return <li key={uniqKey} className={uniqKey}><a href="#" onClick={() => {
         this.props.changeCurrentTable(name);
       }}>{name}</a></li>
     })
@@ -26,7 +27,7 @@ class Tables extends React.Component {
 function mapDispatchToProps(dispatch) {
   return {
     changeCurrentTable: tableName => {
-      dispatch({ type: 'CHANGE_TABLE', tableName: tableName });
+      dispatch({ type: 'TABLE_ROWS_FETCH_REQUESTED', tableName: tableName });
     }
   }
 }

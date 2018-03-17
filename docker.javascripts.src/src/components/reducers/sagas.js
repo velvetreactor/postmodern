@@ -13,11 +13,21 @@ function* connectToDatabase(action) {
 
 function* fetchTables() {
   try {
-    const tablesRes = yield call(API.FetchTables);
-    yield put({ type: 'TABLES_FETCH_SUCCEEDED', tables: tablesRes.body.tables })
+    const res = yield call(API.FetchTables);
+    yield put({ type: 'TABLES_FETCH_SUCCEEDED', tables: res.body.tables })
   } catch(err) {
     console.log(err);
     yield put({ type: 'TABLES_FETCH_FAILED', error: err })
+  }
+}
+
+function* fetchTableRows(action) {
+  try {
+    const res = yield call(API.FetchTableRows, action.tableName)
+    yield put({ type: 'TABLE_ROWS_FETCH_SUCCEEDED', tableRows: res.body.rows })
+  } catch(err) {
+    console.log(err)
+    yield put({ type: 'TABLE_ROWS_FETCH_FAILED' })
   }
 }
 
@@ -38,6 +48,7 @@ function* mySaga() {
   yield takeLatest('DB_CONNECTION_REQUESTED', connectToDatabase);
   yield takeLatest('TABLES_FETCH_REQUESTED', fetchTables);
   yield takeLatest('SESSION_CHECK_REQUESTED', checkSession);
+  yield takeLatest('TABLE_ROWS_FETCH_REQUESTED', fetchTableRows);
 }
 
 export default mySaga;

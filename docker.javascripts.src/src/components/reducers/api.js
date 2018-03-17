@@ -2,30 +2,39 @@ import request from 'superagent';
 
 class API {
   static async Authenticate(connectionString) {
-    let authRes = await request.post('/sessions').send({ connectionString });
-    if (authRes.statusCode === 200) {
+    let res = await request.post('/sessions').send({ connectionString });
+    if (res.statusCode === 200) {
       $('#credentials-modal').modal('hide');
-      return authRes;
+      return res;
     } else {
-      throw new Error(authRes.body);
+      throw new Error(res.body);
     }
   }
 
   static async FetchTables() {
-    let tablesRes = await request.get('/tables');
-    if (tablesRes.statusCode === 200) {
-      return tablesRes;
+    let res = await request.get('/tables');
+    if (res.statusCode === 200) {
+      return res;
     } else {
-      throw new Error(tablesRes.body);
+      throw new Error(res.body);
     }
   }
 
   static async CheckSession() {
-    let sessionRes = await request.get('/sessions')
-    if (sessionRes.statusCode === 200) {
-      return sessionRes
+    let res = await request.get('/sessions')
+    if (res.statusCode === 200) {
+      return res
     } else {
-      throw new Error(authRes.body);
+      throw new Error(res.body);
+    }
+  }
+
+  static async FetchTableRows(tableName) {
+    let res = await request.get(`/tables/${tableName}`);
+    if (res.statusCode === 200) {
+      return res;
+    } else {
+      throw new Error(res.body);
     }
   }
 }
