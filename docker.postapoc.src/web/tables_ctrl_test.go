@@ -129,3 +129,7 @@ func TestTablesShowGoodReqReturns200(t *testing.T) {
 		}
 	}
 }
+
+func TestTablesShowEmptyTableReturnsArray(t *testing.T) {
+	t.Skip("If a table is empty, it should return an empty erray and not null.")
+}

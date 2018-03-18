@@ -29,8 +29,8 @@ function queryState(state = {}, action) {
 
 function rowState(state = {}, action) {
   switch (action.type) {
-    case 'SET_ROWS':
-      return Object.assign({}, state, { rows: action.rows });
+    case 'TABLE_ROWS_FETCH_SUCCEEDED':
+      return Object.assign({}, state, { rows: action.tableRows });
     default:
       return state.rows ? { rows: state.rows } : { rows: [] };
   }

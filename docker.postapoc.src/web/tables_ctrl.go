@@ -18,7 +18,7 @@ type TablesResp struct {
 }
 
 type TableRows struct {
-	Rows []map[string]interface{}
+	Rows []map[string]interface{} `json:"rows"`
 }
 
 type TablesCtrl struct {
