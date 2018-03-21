@@ -67,6 +67,9 @@ func (ctrl *TablesCtrl) ShowFunc(ctx echo.Context) error {
 	for rows.Next() {
 		mapPGRowToTableRow(rows, trs) // at this point in time, represents the cursor at a specific row
 	}
+	if trs.Rows == nil {
+		trs.Rows = make([]map[string]interface{}, 0)
+	}
 	return ctx.JSON(http.StatusOK, trs)
 }
 
