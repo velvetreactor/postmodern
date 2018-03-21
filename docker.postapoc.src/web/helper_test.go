@@ -2,7 +2,6 @@ package web
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -11,6 +10,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 	_ "github.com/lib/pq"
+	"github.com/velvetreactor/postapocalypse/testhelper"
 )
 
 func TestMain(m *testing.M) {
@@ -19,26 +19,11 @@ func TestMain(m *testing.M) {
 		log.Print(err)
 		panic(err)
 	}
-	seedDb(dbo)
+	testhelper.CreateTestTables(dbo)
+	testhelper.SeedDb(dbo)
 	code := m.Run()
 	teardownDb(dbo)
 	os.Exit(code)
-}
-
-func seedDb(dbo *sql.DB) {
-	createTestTables(dbo)
-	insertQrys := []string{
-		"INSERT INTO items VALUES(1, 'Pencil', true)",
-		"INSERT INTO items VALUES(2, 'Cup', false)",
-		"INSERT INTO items VALUES(3, 'Lamp', true)",
-	}
-	for _, query := range insertQrys {
-		_, err := dbo.Exec(query)
-		if err != nil {
-			log.Print(err)
-			panic(err)
-		}
-	}
 }
 
 func teardownDb(dbo *sql.DB) {
@@ -46,17 +31,6 @@ func teardownDb(dbo *sql.DB) {
 	if err != nil {
 		log.Print(err)
 		panic(err)
-	}
-}
-
-func createTestTables(dbo *sql.DB) {
-	tables := []string{"items", "users", "posts"}
-	for _, table := range tables {
-		_, err := dbo.Exec(fmt.Sprintf("CREATE TABLE %s (id integer, name text, active boolean);", table))
-		if err != nil {
-			log.Print(err)
-			panic(err)
-		}
 	}
 }
 

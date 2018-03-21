@@ -17,6 +17,7 @@ services:
       - PORT=3000
       - PGCONN=postgres://postgres@postgres/postgres?sslmode=disable
       - SESSION_SECRET=developmentsecretxyz
+      - ENV=test
     ports:
       - "3000:3000"
     volumes:
@@ -24,6 +25,7 @@ services:
       - css_volume:/go/src/github.com/velvetreactor/postapocalypse/dist/stylesheets
       - ./docker.postapoc.src/static:/go/src/github.com/velvetreactor/postapocalypse/dist/static
       - ./docker.postapoc.src/web:/go/src/github.com/velvetreactor/postapocalypse/web
+      - ./docker.postapoc.src/testhelper:/go/src/github.com/velvetreactor/postapocalypse/testhelper
       - ./docker.postapoc.src/main.go:/go/src/github.com/velvetreactor/postapocalypse/main.go
     depends_on:
       - javascripts
