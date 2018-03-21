@@ -34,12 +34,12 @@ func TestQueriesCreateGoodReqReturns200(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/queries", goodJson)
 	ctx := e.NewContext(req, rec)
 	err := authenticateContext(ctx, cookieStore)
-
-	e.ServeHTTP(rec, req)
-
 	if err != nil {
 		t.Error("Error authenticating context:", err)
 	}
+
+	e.ServeHTTP(rec, req)
+
 	if rec.Code != 200 {
 		t.Error(fmt.Sprintf("Expected status code %d, got %d", 200, rec.Code))
 	}
