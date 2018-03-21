@@ -7,16 +7,15 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+)
 
-	"github.com/labstack/echo"
-	"github.com/nycdavid/ziptie"
+var (
+	sessionsCtrl = &SessionsCtrl{Namespace: "/sessions"}
 )
 
 func TestInvalidSession(t *testing.T) {
-	e := echo.New()
-	setupSessionStore(e)
-	ctrl := &SessionsCtrl{Namespace: "/sessions"}
-	ziptie.Fasten(ctrl, e)
+	e, _ := echoInit(sessionsCtrl)
+
 	req := httptest.NewRequest(http.MethodGet, "/sessions", nil)
 	rec := httptest.NewRecorder()
 
@@ -28,10 +27,7 @@ func TestInvalidSession(t *testing.T) {
 }
 
 func TestValidSessionCreationSendsCookie(t *testing.T) {
-	e := echo.New()
-	setupSessionStore(e)
-	ctrl := &SessionsCtrl{Namespace: "/sessions"}
-	ziptie.Fasten(ctrl, e)
+	e, _ := echoInit(sessionsCtrl)
 
 	var jsonBody bytes.Buffer
 	sesn := Session{ConnectionString: "postgres://postgres@postgres:5432/postgres?sslmode=disable"}
@@ -48,10 +44,7 @@ func TestValidSessionCreationSendsCookie(t *testing.T) {
 }
 
 func TestValidSessionCreationStoresDbo(t *testing.T) {
-	e := echo.New()
-	setupSessionStore(e)
-	ctrl := &SessionsCtrl{Namespace: "/sessions"}
-	ziptie.Fasten(ctrl, e)
+	e, _ := echoInit(sessionsCtrl)
 
 	// Pre-authenticated request
 	var jsonBody bytes.Buffer

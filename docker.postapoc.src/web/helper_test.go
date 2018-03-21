@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 	_ "github.com/lib/pq"
+	"github.com/nycdavid/ziptie"
 	"github.com/satori/go.uuid"
 	"github.com/velvetreactor/postapocalypse/testhelper"
 )
@@ -79,4 +80,10 @@ func authenticateContext(ctx echo.Context, store *sessions.CookieStore) error {
 	sesn.Save(ctx.Request(), ctx.Response())
 	DBObjects[uuid] = dbo
 	return nil
+}
+
+func echoInit(ctrl ziptie.Ctrl) (*echo.Echo, *sessions.CookieStore) {
+	e := echo.New()
+	ziptie.Fasten(ctrl, e)
+	return e, setupSessionStore(e)
 }

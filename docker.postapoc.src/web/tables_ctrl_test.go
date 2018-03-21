@@ -7,23 +7,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gorilla/sessions"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo-contrib/session"
 	_ "github.com/lib/pq"
-	"github.com/nycdavid/ziptie"
 	"github.com/satori/go.uuid"
 )
 
 var (
 	tablesCtrl = &TablesCtrl{Namespace: "/tables"}
 )
-
-func echoInit(ctrl ziptie.Ctrl) (*echo.Echo, *sessions.CookieStore) {
-	e := echo.New()
-	ziptie.Fasten(ctrl, e)
-	return e, setupSessionStore(e)
-}
 
 func TestTablesIndex(t *testing.T) {
 	e, cookieStore := echoInit(tablesCtrl)
@@ -35,10 +25,10 @@ func TestTablesIndex(t *testing.T) {
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/tables", nil)
 	ctx := e.NewContext(req, rec)
-	ctx.Set("_session_store", cookieStore)
-	sesn, _ := session.Get("session", ctx)
-	sesn.Values["uuid"] = sampleUuid.String()
-	sesn.Save(ctx.Request(), ctx.Response())
+	err := authenticateContext(ctx, cookieStore)
+	if err != nil {
+		t.Error("Error authenticating context:", err)
+	}
 
 	e.ServeHTTP(rec, req)
 
@@ -63,10 +53,10 @@ func TestTablesShowNonexistentTableReturns404(t *testing.T) {
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/tables/idontexist", nil)
 	ctx := e.NewContext(req, rec)
-	ctx.Set("_session_store", cookieStore)
-	sesn, _ := session.Get("session", ctx)
-	sesn.Values["uuid"] = sampleUuid.String()
-	sesn.Save(ctx.Request(), ctx.Response())
+	err := authenticateContext(ctx, cookieStore)
+	if err != nil {
+		t.Error("Error authenticating context:", err)
+	}
 
 	e.ServeHTTP(rec, req)
 
@@ -98,10 +88,10 @@ func TestTablesShowGoodReqReturns200(t *testing.T) {
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/tables/items", nil)
 	ctx := e.NewContext(req, rec)
-	ctx.Set("_session_store", cookieStore)
-	sesn, _ := session.Get("session", ctx)
-	sesn.Values["uuid"] = sampleUuid.String()
-	sesn.Save(ctx.Request(), ctx.Response())
+	err := authenticateContext(ctx, cookieStore)
+	if err != nil {
+		t.Error("Error authenticating context:", err)
+	}
 
 	e.ServeHTTP(rec, req)
 	var resp TableRows
