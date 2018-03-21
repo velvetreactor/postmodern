@@ -30,7 +30,6 @@ func (ctrl *SessionsCtrl) ShowFunc(ctx echo.Context) error {
 	sesn, _ := session.Get("session", ctx)
 	storedSesnUuid, ok := sesn.Values["uuid"].(string)
 	if !ok {
-		log.Print("Uuid type assertion failed")
 		return ctx.JSON(http.StatusUnauthorized, false)
 	}
 	sesnUuid, err := uuid.FromString(storedSesnUuid)
