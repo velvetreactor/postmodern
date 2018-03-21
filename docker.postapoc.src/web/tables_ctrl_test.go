@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 	_ "github.com/lib/pq"
@@ -14,11 +15,18 @@ import (
 	"github.com/satori/go.uuid"
 )
 
-func TestTablesIndex(t *testing.T) {
+var (
+	tablesCtrl = &TablesCtrl{Namespace: "/tables"}
+)
+
+func echoInit(ctrl ziptie.Ctrl) (*echo.Echo, *sessions.CookieStore) {
 	e := echo.New()
-	cookieStore := setupSessionStore(e)
-	ctrl := &TablesCtrl{Namespace: "/tables"}
 	ziptie.Fasten(ctrl, e)
+	return e, setupSessionStore(e)
+}
+
+func TestTablesIndex(t *testing.T) {
+	e, cookieStore := echoInit(tablesCtrl)
 
 	sampleUuid := uuid.NewV4()
 	dbo := getDbo(t)
@@ -46,10 +54,7 @@ func TestTablesIndex(t *testing.T) {
 
 // Tables Show action
 func TestTablesShowNonexistentTableReturns404(t *testing.T) {
-	e := echo.New()
-	cookieStore := setupSessionStore(e)
-	ctrl := &TablesCtrl{Namespace: "/tables"}
-	ziptie.Fasten(ctrl, e)
+	e, cookieStore := echoInit(tablesCtrl)
 
 	sampleUuid := uuid.NewV4()
 	dbo := getDbo(t)
@@ -71,10 +76,7 @@ func TestTablesShowNonexistentTableReturns404(t *testing.T) {
 }
 
 func TestTablesShowNoAuthReturns401(t *testing.T) {
-	e := echo.New()
-	setupSessionStore(e)
-	ctrl := &TablesCtrl{Namespace: "/tables"}
-	ziptie.Fasten(ctrl, e)
+	e, _ := echoInit(tablesCtrl)
 
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/tables/items", nil)
@@ -87,10 +89,7 @@ func TestTablesShowNoAuthReturns401(t *testing.T) {
 }
 
 func TestTablesShowGoodReqReturns200(t *testing.T) {
-	e := echo.New()
-	cookieStore := setupSessionStore(e)
-	ctrl := &TablesCtrl{Namespace: "/tables"}
-	ziptie.Fasten(ctrl, e)
+	e, cookieStore := echoInit(tablesCtrl)
 
 	sampleUuid := uuid.NewV4()
 	dbo := getDbo(t)

@@ -1,6 +1,7 @@
 module.exports = {
   login: browser => {
-    let pgConnStr = 'postgres://postgres@postgres:5432/postgres?sslmode=disable'
+    let pgConnStr = 'postgres://postgres@postgres:5432/postgres?sslmode=disable';
+    browser.maximizeWindow();
     browser
       .url(browser.launch_url)
       .waitForElementVisible('#credentials-modal', 1000)

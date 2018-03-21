@@ -37,6 +37,15 @@ class API {
       throw new Error(res.body);
     }
   }
+
+  static async ExecuteQuery(query) {
+    let res = await request.post('/queries').send({ query });
+    if (res.statusCode === 200) {
+      return res;
+    } else {
+      throw new Error(res.body);
+    }
+  }
 }
 
 export default API

@@ -31,6 +31,16 @@ function* fetchTableRows(action) {
   }
 }
 
+function* executeQuery(action) {
+  try {
+    const res = yield call(API.ExecuteQuery, action.query);
+    yield put({ type: 'QUERY_EXECUTION_SUCCEEDED', tableRows: res.body.rows });
+  } catch(err) {
+    console.log(err);
+    yield put({ type: 'QUERY_EXECUTION_FAILED' });
+  }
+}
+
 function* checkSession() {
   try {
     const sessionRes = yield call(API.CheckSession);
@@ -49,6 +59,7 @@ function* mySaga() {
   yield takeLatest('TABLES_FETCH_REQUESTED', fetchTables);
   yield takeLatest('SESSION_CHECK_REQUESTED', checkSession);
   yield takeLatest('TABLE_ROWS_FETCH_REQUESTED', fetchTableRows);
+  yield takeLatest('QUERY_EXECUTION_REQUESTED', executeQuery);
 }
 
 export default mySaga;

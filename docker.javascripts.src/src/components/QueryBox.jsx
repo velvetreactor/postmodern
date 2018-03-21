@@ -16,18 +16,10 @@ class QueryBox extends React.Component {
           this.setState({ query: evt.target.value });
         }}></textarea>
         <button className="btn btn-primary execute-query-btn" onClick={() => {
-          let sqlQuery = this.state.query;
-          this.props.changeQuery(sqlQuery);
+          this.props.changeQuery(this.state.query);
         }}>Query</button>
       </div>
     )
-  }
-}
-
-function setQueryAction(query) {
-  return {
-    type: 'SET_QUERY',
-    query: query
   }
 }
 
@@ -41,7 +33,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     changeQuery: query => {
-      dispatch(setQueryAction(query))
+      dispatch({ type: 'QUERY_EXECUTION_REQUESTED', query })
     }
   }
 }
