@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	_ "github.com/lib/pq"
@@ -120,5 +121,29 @@ func TestTablesShowGoodReqReturns200(t *testing.T) {
 }
 
 func TestTablesShowEmptyTableReturnsArray(t *testing.T) {
-	t.Skip("If a table is empty, it should return an empty erray and not null.")
+	e, cookieStore := echoInit(tablesCtrl)
+
+	sampleUuid := uuid.NewV4()
+	dbo := getDbo(t)
+	DBObjects[sampleUuid] = dbo
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/tables/posts", nil)
+	ctx := e.NewContext(req, rec)
+	err := authenticateContext(ctx, cookieStore)
+	if err != nil {
+		t.Error("Error authenticating context:", err)
+	}
+
+	e.ServeHTTP(rec, req)
+	var resp TableRows
+	json.NewDecoder(rec.Body).Decode(&resp)
+	rt := reflect.TypeOf(resp.Rows)
+
+	if rec.Code != 200 {
+		t.Error(fmt.Sprintf("Expected status code %d, got %d", 200, rec.Code))
+	}
+	if rt.Kind() != reflect.Slice {
+		t.Error("Expected slice.")
+	}
 }
