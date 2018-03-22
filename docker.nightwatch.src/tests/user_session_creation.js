@@ -16,7 +16,7 @@ module.exports = {
     browser.end();
   },
   'A User sees a danger alert box after inputting invalid credentials': browser => {
-    let invalidCreds = 'postgres';
+    let invalidCreds = 'qewery';
     browser
       .url(browser.launch_url)
       .waitForElementVisible('#credentials-modal', 1000)
