@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"sort"
 	"testing"
 
 	_ "github.com/lib/pq"
@@ -40,6 +41,31 @@ func TestTablesIndex(t *testing.T) {
 	}
 	if len(tablesResp.Tables) != 3 {
 		t.Error(fmt.Sprintf("Expected %d tables, got %d", 3, len(tablesResp.Tables)))
+	}
+}
+
+func TestTablesIndexSortsTableNames(t *testing.T) {
+	e, cookieStore := echoInit(tablesCtrl)
+
+	sampleUuid := uuid.NewV4()
+	dbo := getDbo(t)
+	DBObjects[sampleUuid] = dbo
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/tables", nil)
+	ctx := e.NewContext(req, rec)
+	err := authenticateContext(ctx, cookieStore)
+	if err != nil {
+		t.Error("Error authenticating context:", err)
+	}
+
+	e.ServeHTTP(rec, req)
+
+	var tablesResp TablesResp
+	json.NewDecoder(rec.Body).Decode(&tablesResp)
+
+	if !sort.StringsAreSorted(tablesResp.Tables) {
+		t.Error("Expected tables array to be sorted.")
 	}
 }
 
