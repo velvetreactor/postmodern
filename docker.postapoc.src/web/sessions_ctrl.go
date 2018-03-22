@@ -26,6 +26,10 @@ type SessionsCtrl struct {
 	Create    interface{} `path:"" method:"POST"`
 }
 
+type Error struct {
+	Message string `json:"error"`
+}
+
 func (ctrl *SessionsCtrl) ShowFunc(ctx echo.Context) error {
 	sesn, _ := session.Get("session", ctx)
 	storedSesnUuid, ok := sesn.Values["uuid"].(string)
@@ -49,14 +53,11 @@ func (ctrl *SessionsCtrl) CreateFunc(ctx echo.Context) error {
 	json.NewDecoder(ctx.Request().Body).Decode(&sesnBody)
 	db, err := sql.Open("postgres", sesnBody.ConnectionString)
 	if err != nil {
-		log.Print(err)
-		return ctx.JSON(http.StatusUnauthorized, false)
+		return ctx.JSON(http.StatusUnauthorized, Error{Message: err.Error()})
 	}
 	err = db.Ping()
 	if err != nil {
-		log.Print(sesnBody.ConnectionString)
-		log.Print(err)
-		return ctx.JSON(http.StatusUnauthorized, false)
+		return ctx.JSON(http.StatusUnauthorized, Error{Message: err.Error()})
 	}
 	sesn, _ := session.Get("session", ctx)
 	sesn.Options = &sessions.Options{MaxAge: 3600}
