@@ -49,7 +49,7 @@ function* checkSession() {
     yield put({ type: 'TABLES_FETCH_REQUESTED' })
   } catch(err) {
     console.log(err);
-    $('#credentials-modal').modal('show');
+    $('#credentials-modal').modal('show', { backdrop: 'static' });
     yield put({ type: 'SESSION_CHECK_FAILED', error: err })
   }
 }
