@@ -46,8 +46,6 @@ class Rows extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    tableName: state.tableState.tableName,
-    query: state.queryState.query,
     rows: state.rowState.rows
   }
 }
