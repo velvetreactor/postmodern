@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import CredentialsErrorAlert from './CredentialsErrorAlert.jsx'
+
 class CredentialsModal extends React.Component {
   constructor(props) {
     super(props);
@@ -32,6 +34,7 @@ class CredentialsModal extends React.Component {
               <h4 className="modal-title">New Connection</h4>
             </div>
             <div className="modal-body">
+              <CredentialsErrorAlert />
               <form>
                 <div className="form-group">
                   <label className="form-control-label">PG Connection String</label>

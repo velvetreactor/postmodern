@@ -38,7 +38,22 @@ function rowState(state = {}, action) {
   }
 }
 
+function credentialsErrorState(state = {}, action) {
+  switch (action.type) {
+    case 'DB_CONNECTION_FAILED':
+      let errorMsg = action.error.response.body.error
+      return Object.assign({}, state, { visible: true, message: errorMsg });
+    default:
+      if (state.credentialsError) {
+        return state.credentialsError;
+      } else {
+        return { visible: false, message: '' };
+      }
+  }
+}
+
 export default combineReducers({
+  credentialsErrorState,
   databaseState,
   tableState,
   queryState,

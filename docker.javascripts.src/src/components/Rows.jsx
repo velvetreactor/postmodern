@@ -6,28 +6,6 @@ import QueryBox from './QueryBox.jsx';
 class Rows extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      rows: []
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps == this.props) {
-      return false;
-    }
-
-    if (prevProps.tableName != this.props.tableName) {
-      let url = `/rows?table=${this.props.tableName}`
-      return request.get(url).end((err, res) => {
-        this.props.setRows(res.body);
-      });
-    } else if (prevProps.query != this.props.query) {
-      let url = '/query';
-      let postBody = { query: this.props.query };
-      return request.post(url).send(postBody).end((err, res) => {
-        this.props.setRows(res.body);
-      });
-    }
   }
 
   render() {
@@ -66,13 +44,6 @@ class Rows extends React.Component {
   }
 }
 
-function setRowsAction(rows) {
-  return {
-    type: 'SET_ROWS',
-    rows: rows
-  }
-}
-
 function mapStateToProps(state) {
   return {
     tableName: state.tableState.tableName,
@@ -84,7 +55,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     setRows: rows => {
-      dispatch(setRowsAction(rows));
+      dispatch({ type: 'SET_ROWS', rows: rows });
     }
   }
 }

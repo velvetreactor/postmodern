@@ -14,5 +14,14 @@ module.exports = {
     browser
       .waitForElementVisible('.tables li', 1000);
     browser.end();
+  },
+  'A User sees a danger alert box after inputting invalid credentials': browser => {
+    let invalidCreds = 'postgres';
+    browser
+      .url(browser.launch_url)
+      .waitForElementVisible('#credentials-modal', 1000)
+      .setValue('input[name="connectionString"]', invalidCreds)
+      .click('.btn-success')
+      .waitForElementVisible('.alert-danger', 1000);
   }
 }

@@ -15,7 +15,7 @@ class QueryBox extends React.Component {
         <textarea className="form-control" onChange={(evt) => {
           this.setState({ query: evt.target.value });
         }}></textarea>
-        <button className="btn btn-primary execute-query-btn" onClick={() => {
+        <button className="btn btn-default execute-query-btn" onClick={() => {
           this.props.changeQuery(this.state.query);
         }}>Query</button>
       </div>

@@ -26,6 +26,24 @@ func TestInvalidSession(t *testing.T) {
 	}
 }
 
+func TestInvalidSessionCreationSendsErrorMessage(t *testing.T) {
+	e, _ := echoInit(sessionsCtrl)
+
+	var jsonBody bytes.Buffer
+	sesn := Session{ConnectionString: "postgres"}
+	json.NewEncoder(&jsonBody).Encode(sesn)
+	req := httptest.NewRequest(http.MethodPost, "/sessions", &jsonBody)
+	rec := httptest.NewRecorder()
+
+	e.ServeHTTP(rec, req)
+
+	var err Error
+	json.NewDecoder(rec.Body).Decode(&err)
+	if err.Message == "" {
+		t.Error("Expected non-empty error message.")
+	}
+}
+
 func TestValidSessionCreationSendsCookie(t *testing.T) {
 	e, _ := echoInit(sessionsCtrl)
 
