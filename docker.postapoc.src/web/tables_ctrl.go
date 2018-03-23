@@ -37,7 +37,7 @@ func (ctrl *TablesCtrl) IndexFunc(ctx echo.Context) error {
 	}
 	dbo := DBObjects[sesnUuid]
 
-	rows, err := dbo.Query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'")
+	rows, err := dbo.Query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' ORDER BY table_name ASC")
 	if err != nil {
 		log.Fatal(err)
 	}
