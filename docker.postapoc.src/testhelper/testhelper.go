@@ -25,8 +25,9 @@ func SeedDb(dbo *sql.DB) {
 
 func CreateTestTables(dbo *sql.DB) {
 	tables := []string{"items", "users", "posts"}
+	attrs := "(id integer, name text, active boolean, other_id uuid)"
 	for _, table := range tables {
-		_, err := dbo.Exec(fmt.Sprintf("CREATE TABLE %s (id integer, name text, active boolean);", table))
+		_, err := dbo.Exec(fmt.Sprintf("CREATE TABLE %s %s;", table, attrs))
 		if err != nil {
 			log.Print(err)
 			panic(err)
