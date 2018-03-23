@@ -1,4 +1,4 @@
-const TestHelper = require('../test_helper.js');
+const TestHelper = require('../support/test_helper.js');
 
 module.exports = {
   'A User can click on table and view it\'s rows': browser => {

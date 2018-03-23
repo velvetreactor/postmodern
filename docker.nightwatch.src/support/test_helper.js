@@ -1,6 +1,7 @@
+const pgConnStr = 'postgres://postgres@postgres:5432/postgres?sslmode=disable';
 module.exports = {
+  pgConnStr: pgConnStr,
   login: browser => {
-    let pgConnStr = 'postgres://postgres@postgres:5432/postgres?sslmode=disable';
     browser.maximizeWindow();
     browser
       .url(browser.launch_url)
