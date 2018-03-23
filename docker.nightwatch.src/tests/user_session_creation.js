@@ -1,4 +1,4 @@
-const TestHelper = require('../test_helper.js');
+const TestHelper = require('../support/test_helper.js');
 
 module.exports = {
   'A User should not see the modal again after authenticating': browser => {
@@ -23,6 +23,16 @@ module.exports = {
       .setValue('input[name="connectionString"]', invalidCreds)
       .click('.btn-success')
       .waitForElementVisible('.alert-danger', 1000);
+    browser.end();
+  },
+  'A User can press the enter key in the credentials modal': browser => {
+    browser
+      .url(browser.launch_url)
+      .waitForElementVisible('#credentials-modal', 1000)
+      .setValue('input[name="connectionString"]', TestHelper.pgConnStr);
+    browser.submitForm('#credentials-modal form');
+    browser
+      .waitForElementVisible('.tables li', 1000);
     browser.end();
   }
 }

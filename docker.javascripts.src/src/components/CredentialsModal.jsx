@@ -25,6 +25,11 @@ class CredentialsModal extends React.Component {
     this.setState({ [field]: evt.target.value });
   }
 
+  handleSubmit(evt) {
+    evt.preventDefault();
+    this.connectBtnClicked();
+  }
+
   render() {
     return (
       <div id="credentials-modal" className="modal fade" role="dialog" aria-hidden="true">
@@ -35,7 +40,7 @@ class CredentialsModal extends React.Component {
             </div>
             <div className="modal-body">
               <CredentialsErrorAlert />
-              <form>
+              <form onSubmit={this.handleSubmit.bind(this)}>
                 <div className="form-group">
                   <label className="form-control-label">PG Connection String</label>
                   <input
@@ -50,7 +55,7 @@ class CredentialsModal extends React.Component {
               </form>
             </div>
             <div className="modal-footer">
-              <button onClick={this.connectBtnClicked.bind(this)} type="button" className="btn btn-success">Connect</button>
+              <button onClick={this.connectBtnClicked.bind(this)} type="submit" className="btn btn-success">Connect</button>
             </div>
           </div>
         </div>

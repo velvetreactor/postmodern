@@ -1,4 +1,4 @@
-const TestHelper = require('../test_helper.js');
+const TestHelper = require('../support/test_helper.js');
 
 module.exports = {
   'A User can see tables after navigating to the page for a 2nd time': browser => {

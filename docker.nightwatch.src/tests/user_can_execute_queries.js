@@ -1,4 +1,4 @@
-const TestHelper = require('../test_helper.js');
+const TestHelper = require('../support/test_helper.js');
 
 module.exports = {
   'A User can execute SQL queries': browser => {
