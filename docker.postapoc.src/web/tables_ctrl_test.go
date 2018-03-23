@@ -173,3 +173,33 @@ func TestTablesShowEmptyTableReturnsArray(t *testing.T) {
 		t.Error("Expected slice.")
 	}
 }
+
+func TestTablesShowCorrectlyConvertUuid(t *testing.T) {
+	e, cookieStore := echoInit(tablesCtrl)
+
+	sampleUuid := uuid.NewV4()
+	dbo := getDbo(t)
+	DBObjects[sampleUuid] = dbo
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/tables/items", nil)
+	ctx := e.NewContext(req, rec)
+	err := authenticateContext(ctx, cookieStore)
+	if err != nil {
+		t.Error("Error authenticating context:", err)
+	}
+
+	itemUuid := uuid.NewV4()
+	_, err = dbo.Exec(fmt.Sprintf("UPDATE items SET other_id = '%s';", itemUuid.String()))
+	if err != nil {
+		t.Error("Error creating test row:", err)
+	}
+
+	e.ServeHTTP(rec, req)
+
+	var resp TableRows
+	json.NewDecoder(rec.Body).Decode(&resp)
+	if resp.Rows[0]["other_id"] != itemUuid.String() {
+		t.Error(fmt.Sprintf("Expected uuid to be %s, got %s", itemUuid, resp.Rows[0]["other_id"]))
+	}
+}

@@ -112,5 +112,7 @@ func colAssert(key string, value interface{}, row map[string]interface{}) {
 		row[key] = strconv.Itoa(int(t))
 	case bool:
 		row[key] = strconv.FormatBool(t)
+	case []byte:
+		row[key] = string(t)
 	}
 }
