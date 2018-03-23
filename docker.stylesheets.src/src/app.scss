@@ -23,6 +23,9 @@ ul {
 
   td {
     white-space: nowrap;
+    max-width: 60em;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 }
 
