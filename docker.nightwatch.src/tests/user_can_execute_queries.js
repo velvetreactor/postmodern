@@ -9,5 +9,14 @@ module.exports = {
       .click('.execute-query-btn')
       .waitForElementVisible('.tables li', 1000);
     browser.end();
+  },
+  'A User gets feedback after inputing invalid SQL': browser => {
+    TestHelper.login(browser);
+    let invalidQry = "asdf";
+    browser
+      .setValue('.query-box textarea', invalidQry)
+      .click('.execute-query-btn')
+      .waitForElementVisible('.sql-error-message', 1000);
+    browser.end();
   }
 }

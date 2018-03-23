@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux';
 
+import SqlErrorAlert from './SqlErrorAlert.jsx';
+
 class QueryBox extends React.Component {
   constructor(props) {
     super(props);
@@ -15,9 +17,12 @@ class QueryBox extends React.Component {
         <textarea className="form-control" onChange={(evt) => {
           this.setState({ query: evt.target.value });
         }}></textarea>
-        <button className="btn btn-default execute-query-btn" onClick={() => {
-          this.props.changeQuery(this.state.query);
-        }}>Query</button>
+        <div className="row query-feedback">
+          <SqlErrorAlert />
+          <button className="btn btn-default execute-query-btn" onClick={() => {
+            this.props.changeQuery(this.state.query);
+          }}>Query</button>
+        </div>
       </div>
     )
   }

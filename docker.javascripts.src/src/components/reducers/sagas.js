@@ -36,8 +36,8 @@ function* executeQuery(action) {
     const res = yield call(API.ExecuteQuery, action.query);
     yield put({ type: 'QUERY_EXECUTION_SUCCEEDED', tableRows: res.body.rows });
   } catch(err) {
-    console.log(err);
-    yield put({ type: 'QUERY_EXECUTION_FAILED' });
+    let errMsg = err.response.body;
+    yield put({ type: 'QUERY_EXECUTION_FAILED', error: errMsg });
   }
 }
 

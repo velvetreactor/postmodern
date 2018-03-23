@@ -39,8 +39,8 @@ func TestTablesIndex(t *testing.T) {
 	if rec.Code != 200 {
 		t.Error(fmt.Sprintf("Expected %d, got %d", 200, rec.Code))
 	}
-	if len(tablesResp.Tables) != 3 {
-		t.Error(fmt.Sprintf("Expected %d tables, got %d", 3, len(tablesResp.Tables)))
+	if len(tablesResp.Tables) != 4 {
+		t.Error(fmt.Sprintf("Expected %d tables, got %d", 4, len(tablesResp.Tables)))
 	}
 }
 

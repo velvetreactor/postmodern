@@ -43,7 +43,7 @@ class API {
     if (res.statusCode === 200) {
       return res;
     } else {
-      throw new Error(res.body);
+      throw new Error(res);
     }
   }
 }

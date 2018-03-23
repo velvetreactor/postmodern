@@ -52,3 +52,15 @@ ul {
 #credentials-modal {
   display: none;
 }
+
+.query-feedback {
+  margin-right: 0px;
+  position: relative;
+
+  .sql-error-message {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: left;
+  }
+}
