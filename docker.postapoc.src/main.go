@@ -19,7 +19,7 @@ func main() {
 	e := echo.New()
 
 	if os.Getenv("ENV") == "test" {
-		RunDbSetup()
+		RunDbSetup("testhelper/seeds.csv")
 	}
 
 	// Middleware
@@ -47,7 +47,7 @@ func main() {
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", os.Getenv("PORT"))))
 }
 
-func RunDbSetup() {
+func RunDbSetup(seedsPath string) {
 	dbo, err := sql.Open("postgres", os.Getenv("PGCONN"))
 	if err != nil {
 		log.Print(err)
@@ -56,6 +56,5 @@ func RunDbSetup() {
 	if err != nil {
 		log.Print(err)
 	}
-	// testhelper.CreateTestTables(dbo)
-	testhelper.SeedDb(dbo)
+	testhelper.SeedDb(dbo, seedsPath)
 }

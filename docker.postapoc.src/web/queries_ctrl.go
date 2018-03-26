@@ -2,11 +2,13 @@ package web
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/satori/go.uuid"
+	"github.com/velvetreactor/postapocalypse/querynormalizer"
 )
 
 type QueriesCtrl struct {
@@ -31,6 +33,10 @@ func (ctrl *QueriesCtrl) CreateFunc(ctx echo.Context) error {
 	}
 	dbo := DBObjects[uuid]
 	json.NewDecoder(ctx.Request().Body).Decode(&query)
+	if !querynormalizer.HasLimit(query.String) {
+		query.String = querynormalizer.Normalize(query.String)
+		query.String = fmt.Sprintf("%s LIMIT 50", query.String)
+	}
 	rows, err := dbo.Query(query.String)
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, err.Error())

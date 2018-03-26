@@ -1,20 +1,38 @@
 package testhelper
 
 import (
+	"bufio"
 	"database/sql"
+	"encoding/csv"
 	"fmt"
 	"log"
+	"os"
+	"strings"
 
 	_ "github.com/lib/pq"
 )
 
-func SeedDb(dbo *sql.DB) {
-	insertQrys := []string{
-		"INSERT INTO items VALUES(1, 'Pencil', true)",
-		"INSERT INTO items VALUES(2, 'Cup', false)",
-		"INSERT INTO items VALUES(3, 'Lamp', true)",
+func SeedDb(dbo *sql.DB, seedsPath string) {
+	seeds, err := os.Open(seedsPath)
+	if err != nil {
+		log.Print(err)
+		panic(err)
 	}
-	for _, query := range insertQrys {
+	csvRdr := csv.NewReader(bufio.NewReader(seeds))
+	rows, err := csvRdr.ReadAll()
+	if err != nil {
+		log.Print(err)
+		panic(err)
+	}
+	for _, row := range rows {
+		wrapQte := func(row []string) []string {
+			var newRow []string
+			for _, cell := range row {
+				newRow = append(newRow, fmt.Sprintf("'%s'", cell))
+			}
+			return newRow
+		}
+		query := fmt.Sprintf("INSERT INTO items VALUES(%s)", strings.Join(wrapQte(row), ", "))
 		_, err := dbo.Exec(query)
 		if err != nil {
 			log.Print(err)

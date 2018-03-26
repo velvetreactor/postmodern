@@ -22,7 +22,7 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 	testhelper.CreateTestTables(dbo)
-	testhelper.SeedDb(dbo)
+	testhelper.SeedDb(dbo, "../testhelper/seeds.csv")
 	code := m.Run()
 	teardownDb(dbo)
 	os.Exit(code)

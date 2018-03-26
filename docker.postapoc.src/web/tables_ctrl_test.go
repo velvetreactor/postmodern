@@ -127,8 +127,8 @@ func TestTablesShowGoodReqReturns200(t *testing.T) {
 	if rec.Code != 200 {
 		t.Error(fmt.Sprintf("Expected status code %d, got %d", 200, rec.Code))
 	}
-	if len(resp.Rows) != 3 {
-		t.Error(fmt.Sprintf("Expected %d rows, got %d", 3, len(resp.Rows)))
+	if len(resp.Rows) == 0 {
+		t.Error("Expected gt 0 rows.")
 	}
 	firstItem := resp.Rows[0]
 	attrs := []map[string]string{
