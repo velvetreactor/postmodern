@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 const CredentialsErrorAlert = props => {
   if (props.credentialsErrorState.visible) {
     return (
-      <div className="alert alert-danger">
+      <div className="alert alert-danger credentials-alert">
         {props.credentialsErrorState.message}
       </div>
     );

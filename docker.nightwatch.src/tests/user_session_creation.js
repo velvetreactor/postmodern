@@ -22,7 +22,7 @@ module.exports = {
       .waitForElementVisible('#credentials-modal', 1000)
       .setValue('input[name="connectionString"]', invalidCreds)
       .click('.btn-success')
-      .waitForElementVisible('.alert-danger', 1000);
+      .waitForElementVisible('.credentials-alert.alert-danger', 1000);
     browser.end();
   },
   'A User can press the enter key in the credentials modal': browser => {

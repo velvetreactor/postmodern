@@ -26,7 +26,8 @@ test-integ:
 	-f docker-compose.test.yml \
 	up \
 	--force-recreate \
-	--abort-on-container-exit
+	--abort-on-container-exit \
+	| grep nightwatch
 test-unit:
 	docker-compose stop postgres && \
 	docker-compose rm -f postgres && \

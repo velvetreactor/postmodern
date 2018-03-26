@@ -33,7 +33,7 @@ func (ctrl *QueriesCtrl) CreateFunc(ctx echo.Context) error {
 	json.NewDecoder(ctx.Request().Body).Decode(&query)
 	rows, err := dbo.Query(query.String)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, err)
+		return ctx.JSON(http.StatusBadRequest, err.Error())
 	}
 	trs := &TableRows{}
 

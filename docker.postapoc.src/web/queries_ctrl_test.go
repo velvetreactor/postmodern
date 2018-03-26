@@ -12,6 +12,7 @@ import (
 var (
 	queriesCtrl = &QueriesCtrl{Namespace: "/queries"}
 	goodJson    = bytes.NewReader([]byte(`{ "query": "SELECT * FROM items WHERE items.name = 'Pencil';" }`))
+	badQuery    = bytes.NewReader([]byte(`{ "query": "SELECT * FROM items JOIN belongings ON belonging_id = id;" }`))
 )
 
 func TestQueriesCreateNoAuthReturns401(t *testing.T) {
@@ -55,5 +56,27 @@ func TestQueriesCreateGoodReqReturns200(t *testing.T) {
 		if firstRow[k] != v {
 			t.Error(fmt.Sprintf("Expected %s attribute to be %s, but got %s", k, v, firstRow[k]))
 		}
+	}
+}
+
+func TestQueriesCreateHandlesInvalidSql(t *testing.T) {
+	e, cookieStore := echoInit(queriesCtrl)
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodPost, "/queries", badQuery)
+	ctx := e.NewContext(req, rec)
+	err := authenticateContext(ctx, cookieStore)
+	if err != nil {
+		t.Error("Error authenticating context:", err)
+	}
+
+	e.ServeHTTP(rec, req)
+	errMsg := rec.Body.String()
+
+	if rec.Code != 400 {
+		t.Error(fmt.Sprintf("Expected status code %d, got %d", 400, rec.Code))
+	}
+	if errMsg == "" {
+		t.Error("Expected non-blank error message, got:", errMsg)
 	}
 }

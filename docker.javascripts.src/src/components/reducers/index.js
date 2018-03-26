@@ -52,7 +52,22 @@ function credentialsErrorState(state = {}, action) {
   }
 }
 
+function sqlErrorState(state = {}, action) {
+  switch (action.type) {
+    case 'QUERY_EXECUTION_FAILED':
+      let errorMsg = action.error;
+      return Object.assign({}, state, { visible: true, message: errorMsg });
+    default:
+      if (state.sqlError) {
+        return state.sqlError;
+      } else {
+        return { visible: false, message: '' };
+      }
+  }
+}
+
 export default combineReducers({
+  sqlErrorState,
   credentialsErrorState,
   databaseState,
   tableState,
