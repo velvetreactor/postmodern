@@ -9,6 +9,6 @@ gulp.task('default', () => {
     .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('sass:watch', () => {
+gulp.task('sass:watch', ['default'], () => {
   gulp.watch('src/*.scss', ['default']);
 });
