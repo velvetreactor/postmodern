@@ -80,3 +80,47 @@ func TestQueriesCreateHandlesInvalidSql(t *testing.T) {
 		t.Error("Expected non-blank error message, got:", errMsg)
 	}
 }
+
+func TestQueriesCreateLimitsResultSet(t *testing.T) {
+	selectAll := bytes.NewReader([]byte(`{ "query": "SELECT * FROM items;" }`))
+	e, cookieStore := echoInit(queriesCtrl)
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodPost, "/queries", selectAll)
+	ctx := e.NewContext(req, rec)
+	err := authenticateContext(ctx, cookieStore)
+	if err != nil {
+		t.Error("Error authenticating context:", err)
+	}
+
+	e.ServeHTTP(rec, req)
+
+	var trs TableRows
+	json.NewDecoder(rec.Body).Decode(&trs)
+
+	if len(trs.Rows) > 50 {
+		t.Error(fmt.Sprintf("Expected rows to be capped at 50, got %d.", len(trs.Rows)))
+	}
+}
+
+func TestQueriesCreateSupportUserDefinedLimit(t *testing.T) {
+	queryWithLimit := bytes.NewReader([]byte(`{ "query": "SELECT * FROM items LIMIT 10;" }`))
+	e, cookieStore := echoInit(queriesCtrl)
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodPost, "/queries", queryWithLimit)
+	ctx := e.NewContext(req, rec)
+	err := authenticateContext(ctx, cookieStore)
+	if err != nil {
+		t.Error("Error authenticating context:", err)
+	}
+
+	e.ServeHTTP(rec, req)
+
+	var trs TableRows
+	json.NewDecoder(rec.Body).Decode(&trs)
+
+	if len(trs.Rows) != 10 {
+		t.Error(fmt.Sprintf("Expected %d rows, got %d.", 10, len(trs.Rows)))
+	}
+}

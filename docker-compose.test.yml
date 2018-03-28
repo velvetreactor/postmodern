@@ -27,6 +27,7 @@ services:
       - ./docker.postapoc.src/web:/go/src/github.com/velvetreactor/postapocalypse/web
       - ./docker.postapoc.src/testhelper:/go/src/github.com/velvetreactor/postapocalypse/testhelper
       - ./docker.postapoc.src/main.go:/go/src/github.com/velvetreactor/postapocalypse/main.go
+      - ./docker.postapoc.src/querynormalizer:/go/src/github.com/velvetreactor/postapocalypse/querynormalizer
     depends_on:
       - javascripts
       - stylesheets
