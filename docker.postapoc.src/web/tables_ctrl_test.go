@@ -219,6 +219,8 @@ func TestTablesShowAcceptsPageQueryParameter(t *testing.T) {
 		t.Error("Error authenticating context:", err)
 	}
 
+	e.ServeHTTP(rec, req)
+
 	var trs TableRows
 	json.NewDecoder(rec.Body).Decode(&trs)
 	if rec.Code != 200 {
