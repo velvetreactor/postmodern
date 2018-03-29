@@ -203,3 +203,28 @@ func TestTablesShowCorrectlyConvertUuid(t *testing.T) {
 		t.Error(fmt.Sprintf("Expected uuid to be %s, got %s", itemUuid, resp.Rows[0]["other_id"]))
 	}
 }
+
+func TestTablesShowAcceptsPageQueryParameter(t *testing.T) {
+	e, cookieStore := echoInit(tablesCtrl)
+
+	sampleUuid := uuid.NewV4()
+	dbo := getDbo(t)
+	DBObjects[sampleUuid] = dbo
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/tables/items?page=2", nil)
+	ctx := e.NewContext(req, rec)
+	err := authenticateContext(ctx, cookieStore)
+	if err != nil {
+		t.Error("Error authenticating context:", err)
+	}
+
+	var trs TableRows
+	json.NewDecoder(rec.Body).Decode(&trs)
+	if rec.Code != 200 {
+		t.Error(fmt.Sprintf("Expected status code %d, got %d", 200, rec.Code))
+	}
+	if len(trs.Rows) != 7 {
+		t.Error(fmt.Sprintf("Expected %d rows, got %d", 7, len(trs.Rows)))
+	}
+}
