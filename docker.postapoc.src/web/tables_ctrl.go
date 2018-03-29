@@ -11,6 +11,7 @@ import (
 	"github.com/labstack/echo-contrib/session"
 	_ "github.com/lib/pq"
 	"github.com/satori/go.uuid"
+	"github.com/velvetreactor/postapocalypse/querynormalizer"
 )
 
 type TablesResp struct {
@@ -48,12 +49,7 @@ func (ctrl *TablesCtrl) IndexFunc(ctx echo.Context) error {
 }
 
 func (ctrl *TablesCtrl) ShowFunc(ctx echo.Context) error {
-	page, err := strconv.Atoi(ctx.QueryParam("page"))
-	if err != nil || page == 0 {
-		page = 1
-	}
-	offsetMultiple := page - 1
-	offsetQty := offsetMultiple * 50
+	offsetQty := querynormalizer.ToOffsetQty(ctx.QueryParam("page"))
 	sesn, _ := session.Get("session", ctx)
 	uuidStr, ok := sesn.Values["uuid"].(string)
 	if !ok {
