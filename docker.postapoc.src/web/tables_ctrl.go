@@ -48,6 +48,12 @@ func (ctrl *TablesCtrl) IndexFunc(ctx echo.Context) error {
 }
 
 func (ctrl *TablesCtrl) ShowFunc(ctx echo.Context) error {
+	page, err := strconv.Atoi(ctx.QueryParam("page"))
+	if err != nil || page == 0 {
+		page = 1
+	}
+	offsetMultiple := page - 1
+	offsetQty := offsetMultiple * 50
 	sesn, _ := session.Get("session", ctx)
 	uuidStr, ok := sesn.Values["uuid"].(string)
 	if !ok {
@@ -58,7 +64,7 @@ func (ctrl *TablesCtrl) ShowFunc(ctx echo.Context) error {
 		return ctx.JSON(http.StatusUnauthorized, false)
 	}
 	dbo := DBObjects[sesnUuid]
-	qry := fmt.Sprintf("SELECT * FROM %s LIMIT 50", ctx.Param("tableName"))
+	qry := fmt.Sprintf("SELECT * FROM %s LIMIT 50 OFFSET %d", ctx.Param("tableName"), offsetQty)
 	rows, err := dbo.Query(qry)
 	if err != nil {
 		return ctx.JSON(http.StatusNotFound, "Not found")
