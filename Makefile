@@ -22,12 +22,14 @@ dep-ensure:
 
 # Testing
 test-integ:
+	docker-compose stop postgres && \
+	docker-compose rm -f postgres && \
 	docker-compose \
 	-f docker-compose.test.yml \
 	up \
 	--force-recreate \
 	--abort-on-container-exit \
-	| grep nightwatch
+	| grep -E "(nightwatch|postapoc)"
 test-unit:
 	docker-compose stop postgres && \
 	docker-compose rm -f postgres && \

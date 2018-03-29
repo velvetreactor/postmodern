@@ -56,5 +56,6 @@ func RunDbSetup(seedsPath string) {
 	if err != nil {
 		log.Print(err)
 	}
+	testhelper.CreateTestTables(dbo)
 	testhelper.SeedDb(dbo, seedsPath)
 }
