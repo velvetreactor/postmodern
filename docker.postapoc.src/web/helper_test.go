@@ -37,20 +37,14 @@ func teardownDb(dbo *sql.DB) {
 }
 
 func getDbo(t *testing.T) *sql.DB {
-	db, err := sql.Open("postgres", os.Getenv("PGCONN"))
+	pgConn, err := openPgConnection()
 	if err != nil {
-		log.Print(err)
-		t.Error("Cannot open PG connection")
+		t.Error(err)
 	}
-	err = db.Ping()
-	if err != nil {
-		log.Print(err)
-		t.Error("Cannot open PG connection")
-	}
-	return db
+	return pgConn
 }
 
-func getDbob() (*sql.DB, error) {
+func openPgConnection() (*sql.DB, error) {
 	db, err := sql.Open("postgres", os.Getenv("PGCONN"))
 	if err != nil {
 		return nil, err
@@ -71,7 +65,7 @@ func setupSessionStore(e *echo.Echo) *sessions.CookieStore {
 func authenticateContext(ctx echo.Context, store *sessions.CookieStore) error {
 	ctx.Set("_session_store", store)
 	uuid := uuid.NewV4()
-	dbo, err := getDbob()
+	dbo, err := openPgConnection()
 	if err != nil {
 		return err
 	}
