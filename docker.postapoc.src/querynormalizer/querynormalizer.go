@@ -1,6 +1,7 @@
 package querynormalizer
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -18,4 +19,14 @@ func HasLimit(query string) bool {
 		return true
 	}
 	return false
+}
+
+func ToOffsetQty(page string) int {
+	pageNum, _ := strconv.Atoi(page)
+	if pageNum == 0 {
+		pageNum = 1
+	}
+	offsetMultiplier := pageNum - 1
+	offsetQty := 50 * offsetMultiplier
+	return offsetQty
 }

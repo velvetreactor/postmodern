@@ -25,3 +25,40 @@ func TestHasLimit(t *testing.T) {
 		t.Error(fmt.Sprintf("Expected hasLimit to be %t, got %t", true, hasLimit))
 	}
 }
+
+// .ToOffsetQty
+func TestToOffsetQty(t *testing.T) {
+	expected := 100
+	page := "3"
+
+	offsetQty := ToOffsetQty(page)
+
+	if offsetQty != expected {
+		errMsg := fmt.Sprintf("Expected offset quantity to be %d, got %d", expected, offsetQty)
+		t.Error(errMsg)
+	}
+}
+
+func TestToOffsetQtyHandlesZeroPageParam(t *testing.T) {
+	expected := 0
+	page := "0"
+
+	offsetQty := ToOffsetQty(page)
+
+	if offsetQty != expected {
+		errMsg := fmt.Sprintf("Expected offset quantity to be %d, got %d", expected, offsetQty)
+		t.Error(errMsg)
+	}
+}
+
+func TestToOffsetQtyHandlesNonIntPageParam(t *testing.T) {
+	expected := 0
+	page := "asdf"
+
+	offsetQty := ToOffsetQty(page)
+
+	if offsetQty != expected {
+		errMsg := fmt.Sprintf("Expected offset quantity to be %d, got %d", expected, offsetQty)
+		t.Error(errMsg)
+	}
+}
