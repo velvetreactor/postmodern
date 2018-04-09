@@ -19,6 +19,10 @@ class QueryBox extends React.Component {
         }}></textarea>
         <div className="row query-feedback">
           <SqlErrorAlert />
+          <ul className="pages">
+            <li className="page">1</li>
+            <li className="page">2</li>
+          </ul>
           <button className="btn btn-default execute-query-btn" onClick={() => {
             this.props.changeQuery(this.state.query);
           }}>Query</button>
