@@ -230,3 +230,30 @@ func TestTablesShowAcceptsPageQueryParameter(t *testing.T) {
 		t.Error(fmt.Sprintf("Expected %d rows, got %d", 7, len(trs.Rows)))
 	}
 }
+
+func TestTablesShowProvidesNumberOfPages(t *testing.T) {
+	e, cookieStore := echoInit(tablesCtrl)
+
+	sampleUuid := uuid.NewV4()
+	dbo := getDbo(t)
+	DBObjects[sampleUuid] = dbo
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/tables/items", nil)
+	ctx := e.NewContext(req, rec)
+	err := authenticateContext(ctx, cookieStore)
+	if err != nil {
+		t.Error("Error authenticating context:", err)
+	}
+
+	e.ServeHTTP(rec, req)
+
+	var trs TableRows
+	json.NewDecoder(rec.Body).Decode(&trs)
+	if rec.Code != 200 {
+		t.Error(fmt.Sprintf("Expected status code %d, got %d", 200, rec.Code))
+	}
+	if trs.Pages != 2 {
+		t.Error(fmt.Sprintf("Expected pages to equal %d, got %d", 2, trs.Pages))
+	}
+}

@@ -19,7 +19,8 @@ type TablesResp struct {
 }
 
 type TableRows struct {
-	Rows []map[string]interface{} `json:"rows"`
+	Rows  []map[string]interface{} `json:"rows"`
+	Pages int                      `json:"pages"`
 }
 
 type TablesCtrl struct {
