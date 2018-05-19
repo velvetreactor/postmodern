@@ -30,7 +30,11 @@ test-integ:
 	--force-recreate \
 	--abort-on-container-exit \
 	| grep -E "(nightwatch|postapoc)"
+
 test-unit:
 	docker-compose stop postgres && \
 	docker-compose rm -f postgres && \
 	docker-compose run --rm postapoc go test -v ./...
+
+test-js:
+	docker-compose run --rm javascripts npm test
