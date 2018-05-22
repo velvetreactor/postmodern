@@ -6,8 +6,8 @@ import 'babel-polyfill';
 import createSagaMiddleware from 'redux-saga';
 
 import App from './components/App.jsx';
-import masterReducer from './components/reducers';
-import mySaga from './components/reducers/sagas.js';
+import masterReducer from './reducers';
+import mySaga from './reducers/sagas.js';
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(masterReducer, applyMiddleware(sagaMiddleware));
