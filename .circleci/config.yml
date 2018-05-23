@@ -2,14 +2,30 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/ruby:2.2.7
+      - image: circleci/golang:1.10
+      - image: postgres:10.3-alpine
+    working_directory: /go/src/github.com/velvetreactor/postapocalypse
     steps:
       - checkout
-      - run:
-          name: Install Docker Compose
-          command: |
-            curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
       - setup_remote_docker
-      - run: docker-compose run postapoc go test -v ./...
+      - run:
+          name: Create Postapoc network
+          command: docker network create postapoc
+      - run:
+          name: Start Postgres
+          command: docker run --network postapoc --name postgres -d -p 5432:5432 postgres:10.3-alpine
+      - run:
+          name: Run Go unit tests
+          command: |
+            docker run \
+            --network postapoc \
+            -e PORT=3000 \
+            -e PGCONN=postgres://postgres@postgres/postgres?sslmode=disable \
+            -e SESSION_SECRET=developmentsecretxyz \
+            nycdavid/postapoc:0.0.1 \
+            go test -v ./...
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
