@@ -1,5 +1,7 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
+
 import API from './api.js';
+import * as constants from '../constants';
 
 function* connectToDatabase(action) {
   try {
@@ -14,7 +16,7 @@ function* connectToDatabase(action) {
 function* fetchTables() {
   try {
     const res = yield call(API.FetchTables);
-    yield put({ type: 'TABLES_FETCH_SUCCEEDED', tables: res.body.tables })
+    yield put({ type: constants.TABLES_FETCH_SUCCEEDED, tables: res.body.tables })
   } catch(err) {
     console.log(err);
     yield put({ type: 'TABLES_FETCH_FAILED', error: err })
