@@ -12,7 +12,7 @@ function databaseState(state = {}, action) {
 
 function tableState(state = {}, action) {
   switch (action.type) {
-    case 'CHANGE_TABLE':
+    case constants.CHANGE_TABLE:
       return Object.assign({}, state, { tableName: action.tableName });
     default:
       return state.tableName ? { tableName: state.tableName } : { tableName: '' };
