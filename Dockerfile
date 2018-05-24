@@ -11,7 +11,6 @@ COPY ./docker.postapoc.src ./
 RUN apk update && \
   apk add curl git && \
   curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh && \
-  go get github.com/codegangsta/gin && \
   dep ensure
 
 CMD ["gin", "run", "main.go"]
