@@ -3,32 +3,28 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.10
-      - image: postgres:10.3-alpine
     working_directory: /go/src/github.com/velvetreactor/postapocalypse
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Create Postapoc network
-          command: docker network create postapoc
+          name: Build Postapocalypse image
+          command: make image-postapoc
       - run:
-          name: Start Postgres
-          command: docker run --network postapoc --name postgres -d -p 5432:5432 postgres:10.3-alpine
+          name: Build Postapocalypse JS image
+          command: make image-js
       - run:
           name: Run Go unit tests
           command: |
-            docker run \
-            --network postapoc \
-            -e PORT=3000 \
-            -e PGCONN=postgres://postgres@postgres/postgres?sslmode=disable \
-            -e SESSION_SECRET=developmentsecretxyz \
-            nycdavid/postapoc:0.0.1 \
+            docker-compose \
+            -f docker-compose.circleci.yml \
+            run \
+            postapoc \
             go test -v ./...
       - run:
           name: Run Javascript unit tests
           command: |
             docker run \
-            --network postapoc \
             nycdavid/postapoc-js:0.0.1 \
             npm t
 workflows:
