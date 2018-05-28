@@ -1,0 +1,53 @@
+version: "3"
+services:
+  javascripts:
+    image: nycdavid/postapoc-js:0.0.1
+    volumes:
+      - js_volume:/app/dist
+      - ./docker.javascripts.src/src:/app/src
+      - ./docker.javascripts.src/__tests__:/app/__tests__
+  stylesheets:
+    image: nycdavid/postapoc-css:0.0.1
+    volumes:
+      - css_volume:/app/dist
+      - ./docker.stylesheets.src/src:/app/src
+  postapoc:
+    image: nycdavid/postapoc:0.0.1
+    environment:
+      - PORT=3000
+      - PGCONN=postgres://postgres@postgres/postgres?sslmode=disable
+      - SESSION_SECRET=developmentsecretxyz
+      - ENV=test
+    ports:
+      - "3000:3000"
+    volumes:
+      - js_volume:/go/src/github.com/velvetreactor/postapocalypse/dist/javascripts
+      - css_volume:/go/src/github.com/velvetreactor/postapocalypse/dist/stylesheets
+    depends_on:
+      - javascripts
+      - stylesheets
+      - postgres
+  postgres:
+    image: postgres:10.3-alpine
+  nightwatch:
+    entrypoint:
+      - ./scripts/wait_for_curl.sh
+      - http://postapoc:3000
+      - "nightwatch"
+    image: nycdavid/nightwatch:0.0.1
+    volumes:
+      - ./docker.nightwatch.src/tests:/app/tests
+      - ./docker.nightwatch.src/videos:/app/videos
+      - ./docker.nightwatch.src/support:/app/support
+    depends_on:
+      - chromedriver
+      - postapoc
+  chromedriver:
+    image: nycdavid/chromedriver:0.0.1
+    environment:
+      - VNC_ENABLED=true
+      - EXPOSE_X11=true
+
+volumes:
+  js_volume:
+  css_volume:
