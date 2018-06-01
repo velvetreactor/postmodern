@@ -32,7 +32,7 @@ function rowState(state = {}, action) {
   switch (action.type) {
     case constants.QUERY_EXECUTION_SUCCEEDED:
       return Object.assign({}, state, { rows: action.tableRows });
-    case 'TABLE_ROWS_FETCH_SUCCEEDED':
+    case constants.TABLE_ROWS_FETCH_SUCCEEDED:
       return Object.assign({}, state, { rows: action.tableRows });
     default:
       return state.rows ? { rows: state.rows } : { rows: [] };
