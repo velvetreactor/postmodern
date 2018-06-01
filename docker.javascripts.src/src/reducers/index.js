@@ -21,7 +21,7 @@ function tableState(state = {}, action) {
 
 function queryState(state = {}, action) {
   switch (action.type) {
-    case 'SET_QUERY':
+    case constants.SET_QUERY:
       return Object.assign({}, state, { query: action.query });
     default:
       return state.query ? { query: state.query } : { query: '' };

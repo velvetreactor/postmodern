@@ -1,3 +1,5 @@
 export const TABLES_FETCH_SUCCEEDED = 'TABLES_FETCH_SUCCEEDED';
 
 export const CHANGE_TABLE = 'CHANGE_TABLE';
+
+export const SET_QUERY = 'SET_QUERY';
