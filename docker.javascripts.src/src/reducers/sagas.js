@@ -39,7 +39,7 @@ function* executeQuery(action) {
     yield put({ type: 'QUERY_EXECUTION_SUCCEEDED', tableRows: res.body.rows });
   } catch(err) {
     let errMsg = err.response.body;
-    yield put({ type: 'QUERY_EXECUTION_FAILED', error: errMsg });
+    yield put({ type: constants.QUERY_EXECUTION_FAILED, error: errMsg });
   }
 }
 
