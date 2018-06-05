@@ -124,3 +124,29 @@ func TestQueriesCreateSupportUserDefinedLimit(t *testing.T) {
 		t.Error(fmt.Sprintf("Expected %d rows, got %d.", 10, len(trs.Rows)))
 	}
 }
+
+func TestQueriesCtrl_supportOffsetParameter(t *testing.T) {
+	qry := bytes.NewReader([]byte(`{
+    "query": "SELECT * FROM items;",
+    "offset": 50
+  }`))
+	e, cookieStore := echoInit(queriesCtrl)
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodPost, "/queries", qry)
+	ctx := e.NewContext(req, rec)
+	err := authenticateContext(ctx, cookieStore)
+	if err != nil {
+		t.Error("Error authenticating context:", err)
+	}
+
+	e.ServeHTTP(rec, req)
+
+	var trs TableRows
+	json.NewDecoder(rec.Body).Decode(&trs)
+
+	if len(trs.Rows) > 10 {
+		msg := fmt.Sprintf("Expected rows to be lt %d but got %d", 10, len(trs.Rows))
+		t.Error(msg)
+	}
+}
