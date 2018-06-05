@@ -9,7 +9,7 @@ function* connectToDatabase(action) {
     yield put({ type: 'DB_CONNECTION_SUCCEEDED' });
     yield put({ type: 'TABLES_FETCH_REQUESTED' });
   } catch(err) {
-    yield put({ type: 'DB_CONNECTION_FAILED', error: err })
+    yield put({ type: constants.DB_CONNECTION_FAILED, error: err })
   }
 }
 

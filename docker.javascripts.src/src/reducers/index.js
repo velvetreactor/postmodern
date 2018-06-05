@@ -41,7 +41,7 @@ function rowState(state = {}, action) {
 
 function credentialsErrorState(state = {}, action) {
   switch (action.type) {
-    case 'DB_CONNECTION_FAILED':
+    case constants.DB_CONNECTION_FAILED:
       let errorMsg = action.error.response.body.error
       return Object.assign({}, state, { visible: true, message: errorMsg });
     default:
