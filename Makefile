@@ -31,10 +31,14 @@ test-integ:
 	--abort-on-container-exit \
 	| grep -E "(nightwatch|postapoc)"
 
+func?=
+ifdef func
+	runCmd=-run $(func)
+endif
 test-unit:
 	docker-compose stop postgres && \
 	docker-compose rm -f postgres && \
-	docker-compose run --rm postapoc go test -v ./...
+	docker-compose run --rm postapoc go test -v $(runCmd) ./...
 
 test-js:
 	docker-compose run --rm javascripts npm test

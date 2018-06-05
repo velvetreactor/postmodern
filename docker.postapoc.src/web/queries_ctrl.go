@@ -18,6 +18,7 @@ type QueriesCtrl struct {
 
 type Query struct {
 	String string `json:"query"`
+	Offset int    `json:"offset"`
 }
 
 func (ctrl *QueriesCtrl) CreateFunc(ctx echo.Context) error {
@@ -36,6 +37,9 @@ func (ctrl *QueriesCtrl) CreateFunc(ctx echo.Context) error {
 	if !querynormalizer.HasLimit(query.String) {
 		query.String = querynormalizer.Normalize(query.String)
 		query.String = fmt.Sprintf("%s LIMIT 50", query.String)
+	}
+	if query.Offset != 0 {
+		query.String = fmt.Sprintf("%s OFFSET %d", query.String, query.Offset)
 	}
 	rows, err := dbo.Query(query.String)
 	if err != nil {
