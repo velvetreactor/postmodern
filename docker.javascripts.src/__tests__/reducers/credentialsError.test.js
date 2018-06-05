@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 
 import masterReducer from '../../src/reducers';
-import * as constants from '../../src/constants'
+import * as constants from '../../src/constants';
 
 describe('when handling the DB_CONNECTION_FAILED event', () => {
   let store = createStore(masterReducer)

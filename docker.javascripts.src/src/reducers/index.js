@@ -55,7 +55,7 @@ function credentialsErrorState(state = {}, action) {
 
 function sqlErrorState(state = {}, action) {
   switch (action.type) {
-    case 'QUERY_EXECUTION_FAILED':
+    case constants.QUERY_EXECUTION_FAILED:
       let errorMsg = action.error;
       return Object.assign({}, state, { visible: true, message: errorMsg });
     default:
