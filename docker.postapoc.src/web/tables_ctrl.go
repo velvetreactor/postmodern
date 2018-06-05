@@ -58,9 +58,18 @@ func (ctrl *TablesCtrl) ShowFunc(ctx echo.Context) error {
 		return ctx.JSON(http.StatusUnauthorized, false)
 	}
 	dbo := DBObjects[sesnUuid]
-	qry := fmt.Sprintf("SELECT * FROM %s LIMIT 50", ctx.Param("tableName"))
+	offset := "0"
+	if ctx.QueryParam("offset") != "" {
+		offset = ctx.QueryParam("offset")
+	}
+	qry := fmt.Sprintf(
+		"SELECT * FROM %s LIMIT 50 OFFSET %s",
+		ctx.Param("tableName"),
+		offset,
+	)
 	rows, err := dbo.Query(qry)
 	if err != nil {
+		log.Print(err)
 		return ctx.JSON(http.StatusNotFound, "Not found")
 	}
 	trs := &TableRows{}
